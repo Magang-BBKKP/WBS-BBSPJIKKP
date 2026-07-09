@@ -1,0 +1,141 @@
+:root {
+    --bs-primary: #0a4282; /* Adjusted to a deeper blue from the screenshot */
+    --bs-primary-soft: #eaf1ff;
+    --bs-info: #00d2ff;
+    --bs-dark-blue: #0b192c;
+    --bs-light-blue: #f2f7ff;
+    --bs-gray-text: #6c757d;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #fafbfe; /* Very subtle light background */
+    color: #2b3543;
+}
+
+/* Utilities */
+.bg-primary-soft { background-color: var(--bs-primary-soft) !important; }
+.text-primary { color: var(--bs-primary) !important; }
+.bg-dark-blue { background-color: var(--bs-dark-blue) !important; }
+.bg-light-blue { background-color: var(--bs-light-blue) !important; }
+.letter-spacing-wide { letter-spacing: 0.1em; }
+.z-index-2 { z-index: 2; }
+.bg-white-10 { background-color: rgba(255,255,255,0.1); }
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+}
+
+/* Navbar */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+.nav-link {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem !important;
+}
+.nav-link.active {
+    color: var(--bs-primary) !important;
+    border-bottom: 2px solid var(--bs-primary);
+}
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+.btn-primary {
+    background-color: var(--bs-dark-blue);
+    border-color: var(--bs-dark-blue);
+}
+.btn-primary:hover {
+    background-color: #162a4a;
+    border-color: #162a4a;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(11, 25, 44, 0.2);
+}
+.btn-outline-primary.btn-track {
+    color: var(--bs-info);
+    border-color: var(--bs-info);
+    background: transparent;
+}
+.btn-outline-primary.btn-track:hover {
+    background-color: var(--bs-info);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    background: transparent;
+}
+.min-vh-75 {
+    min-height: 75vh;
+}
+.hero-card {
+    max-width: 380px;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 24px;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05) !important;
+}
+.icon-circle {
+    width: 90px;
+    height: 90px;
+}
+.blob-1 {
+    width: 300px;
+    height: 300px;
+    top: -10%;
+    right: -10%;
+    filter: blur(60px);
+    z-index: 1;
+}
+.blob-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -5%;
+    left: 10%;
+    filter: blur(50px);
+    z-index: 1;
+}
+
+/* Bento Cards */
+.bento-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 20px !important;
+    border-color: #ebedef !important;
+}
+.bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.04) !important;
+}
+.icon-sm {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+}
+
+/* Accordion */
+.custom-accordion .accordion-item {
+    border-color: #f1f3f5 !important;
+}
+.custom-accordion .accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
+    box-shadow: none;
+}
+.custom-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,0.125);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--bs-light-blue);
+}
