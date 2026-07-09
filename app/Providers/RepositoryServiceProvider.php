@@ -6,16 +6,16 @@ use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
     public function register(): void
     {
-        // Bind repositories here, e.g.:
-        // $this->app->bind(
-        //     \App\Repositories\UserRepositoryInterface::class,
-        //     \App\Repositories\UserRepository::class
-        // );
+        $this->app->bind(
+            \App\Repositories\Contracts\UserRepositoryInterface::class,
+            \App\Repositories\UserRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Contracts\AuditLogRepositoryInterface::class,
+            \App\Repositories\AuditLogRepository::class
+        );
     }
 
     /**

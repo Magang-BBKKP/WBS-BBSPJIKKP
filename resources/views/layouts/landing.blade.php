@@ -46,9 +46,16 @@
                     </li>
                 </ul>
             </div>
-            <div class="d-none d-lg-block">
-                <span class="text-muted small me-2">ID</span>
-                <i class="bi bi-globe"></i>
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-none d-lg-block">
+                    <span class="text-muted small me-1">ID</span>
+                    <i class="bi bi-globe text-muted"></i>
+                </div>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary btn-sm px-4 rounded-pill fw-medium">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary btn-sm px-4 rounded-pill fw-medium">Login</a>
+                @endauth
             </div>
         </div>
     </nav>
