@@ -44,6 +44,23 @@ services:
     networks:
       - wbs-network
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: wbs-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_PASSWORD:-secret}
+      UPLOAD_LIMIT: 100M
+    depends_on:
+      - db
+    networks:
+      - wbs-network
+
 networks:
   wbs-network:
     driver: bridge
