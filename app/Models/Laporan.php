@@ -75,4 +75,14 @@ class Laporan extends Model
     {
         return $this->hasMany(Bukti::class, 'laporan_id');
     }
+
+    public function timelines()
+    {
+        return $this->hasMany(LaporanTimeline::class, 'laporan_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(LaporanMessage::class, 'laporan_id');
+    }
 }

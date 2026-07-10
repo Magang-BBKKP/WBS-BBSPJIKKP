@@ -41,7 +41,7 @@
                         <a class="nav-link fw-medium text-muted" href="{{ route('laporan.create') }}">Lapor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium text-muted" href="#track">Lacak</a>
+                        <a class="nav-link fw-medium text-muted" href="{{ route('track.index') }}">Lacak</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-medium text-muted" href="#kontak">Kontak</a>
