@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Bukti;
 use App\Models\Laporan;
-use App\Repositories\LaporanRepository;
+use App\Repositories\Contracts\LaporanRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class LaporanService extends BaseService
 {
     public function __construct(
-        protected LaporanRepository $laporanRepository
+        protected LaporanRepositoryInterface $laporanRepository
     ) {}
 
     /**
