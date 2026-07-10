@@ -6,6 +6,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\TrackingController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
 
@@ -16,10 +17,13 @@ Route::prefix('laporan')->name('laporan.')->group(function () {
     Route::get('/sukses', [LaporanController::class, 'success'])->name('sukses');
 });
 
-// Placeholder for tracking route to prevent errors
-Route::get('/tracking', function() {
-    return "Halaman Pelacakan (Sedang dalam pengembangan)";
-})->name('tracking.index');
+// Tracking Routes
+Route::get('/track', [TrackingController::class, 'index'])->name('track.index');
+Route::post('/track', [TrackingController::class, 'search'])->name('track.search');
+Route::get('/track/{token}', [TrackingController::class, 'show'])->name('track.show');
+Route::post('/track/{token}/evidence', [TrackingController::class, 'storeEvidence'])->name('track.evidence.store');
+Route::get('/track/{token}/messages', [TrackingController::class, 'fetchMessages'])->name('track.messages.fetch');
+Route::post('/track/{token}/messages', [TrackingController::class, 'storeMessage'])->name('track.message.store');
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
