@@ -5,8 +5,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LaporanController;
 
-Route::get('/', [LandingPageController::class, 'index']);
+Route::get('/', [LandingPageController::class, 'index'])->name('home');
+
+// ── Public: Pelaporan (tidak perlu login) ──────────────────
+Route::prefix('laporan')->name('laporan.')->group(function () {
+    Route::get('/buat',   [LaporanController::class, 'create'])->name('create');
+    Route::post('/buat',  [LaporanController::class, 'store'])->name('store');
+    Route::get('/sukses', [LaporanController::class, 'success'])->name('sukses');
+});
 
 // Guest Routes
 Route::middleware('guest')->group(function () {

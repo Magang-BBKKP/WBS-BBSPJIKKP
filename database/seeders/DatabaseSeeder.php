@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
         // 1. Seed Roles & Permissions terlebih dahulu
         $this->call(RolePermissionSeeder::class);
 
+        // 2. Seed Kategori Pelanggaran
+        $this->call(KategoriSeeder::class);
+
         // 2. Buat Super Admin default
         $superAdmin = User::firstOrCreate(
             ['email' => 'admin@bbspjikkp.go.id'],
