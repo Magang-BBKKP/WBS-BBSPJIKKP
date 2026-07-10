@@ -46,6 +46,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                     </li>
+                    @can('view-user')
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">User Management</a>
+                        </li>
+                    @endcan
                 </ul>
                 <div class="d-flex align-items-center">
                     <div class="dropdown">
