@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'     => 'Super Admin WBS',
                 'password' => Hash::make('Admin@bbspjikkp123'),
+                'is_active'=> true,
                 'status'   => 'active',
             ]
         );
