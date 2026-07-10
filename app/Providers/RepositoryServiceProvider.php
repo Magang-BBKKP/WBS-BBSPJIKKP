@@ -16,6 +16,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\AuditLogRepositoryInterface::class,
             \App\Repositories\AuditLogRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Contracts\LaporanRepositoryInterface::class,
+            \App\Repositories\LaporanRepository::class
+        );
     }
 
     /**

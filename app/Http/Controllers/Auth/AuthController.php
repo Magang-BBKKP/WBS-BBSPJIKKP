@@ -40,7 +40,11 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
         
-        return redirect()->route('dashboard');
+        if ($user && $user->can('view-dashboard')) {
+            return redirect()->route('dashboard');
+        }
+        
+        return redirect()->route('home');
     }
 
     public function login(LoginRequest $request)
@@ -50,7 +54,13 @@ class AuthController extends Controller
 
         if ($this->authService->attemptLogin($credentials, $remember, $request->ip(), $request->userAgent())) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'));
+            
+            $user = auth()->user();
+            if ($user && $user->can('view-dashboard')) {
+                return redirect()->intended(route('dashboard'));
+            }
+            
+            return redirect()->route('home');
         }
 
         return back()->withErrors([

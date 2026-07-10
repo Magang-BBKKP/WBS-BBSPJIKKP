@@ -57,6 +57,18 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(11, 25, 44, 0.2);
 }
+.btn-outline-primary {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    background: transparent;
+}
+.btn-outline-primary:hover {
+    background-color: var(--bs-primary);
+    color: #fff;
+    border-color: var(--bs-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(10, 66, 130, 0.15);
+}
 .btn-outline-primary.btn-track {
     color: var(--bs-info);
     border-color: var(--bs-info);

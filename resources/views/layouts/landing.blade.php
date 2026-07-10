@@ -54,7 +54,47 @@
                     <i class="bi bi-globe text-muted"></i>
                 </div>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="btn btn-outline-primary btn-sm px-4 rounded-pill fw-medium">Dashboard</a>
+                    <div class="dropdown">
+                        <button class="btn btn-link text-decoration-none dropdown-toggle text-dark d-flex align-items-center gap-2 p-0 animate-fade-in" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            @if(auth()->user()->profile_photo)
+                                <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="Profile" class="rounded-circle object-fit-cover shadow-sm" style="width: 32px; height: 32px;">
+                            @else
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}
+                                </div>
+                            @endif
+                            <span class="d-none d-md-inline fw-medium text-muted" style="font-size: 0.95rem;">{{ auth()->user()->name }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3 mt-2" aria-labelledby="userMenuDropdown">
+                            <li>
+                                <div class="px-3 py-2 border-bottom">
+                                    <p class="mb-0 small text-muted">Masuk sebagai</p>
+                                    <p class="mb-0 fw-bold small text-truncate" style="max-width: 180px;">{{ auth()->user()->email }}</p>
+                                </div>
+                            </li>
+                            @can('view-dashboard')
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="{{ route('dashboard') }}">
+                                        <i class="bi bi-grid-fill text-primary"></i> Dashboard
+                                    </a>
+                                </li>
+                            @endcan
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="{{ route('profile.edit') }}">
+                                    <i class="bi bi-person-gear"></i> Profil Saya
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
+                                        <i class="bi bi-box-arrow-right"></i> Keluar
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-primary btn-sm px-4 rounded-pill fw-medium">Login</a>
                 @endauth
