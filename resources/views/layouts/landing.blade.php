@@ -18,6 +18,8 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    
+    @stack('styles')
 </head>
 <body>
 
@@ -36,7 +38,7 @@
                         <a class="nav-link active fw-medium" href="#">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium text-muted" href="#process">Lapor</a>
+                        <a class="nav-link fw-medium text-muted" href="{{ route('laporan.create') }}">Lapor</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-medium text-muted" href="#track">Lacak</a>
@@ -82,5 +84,7 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @stack('scripts')
 </body>
 </html>

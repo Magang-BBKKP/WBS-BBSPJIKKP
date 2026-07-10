@@ -18,7 +18,7 @@
                     Berintegritas • Siap Melayani. Media pelaporan resmi untuk dugaan pelanggaran dengan jaminan perlindungan dan kerahasiaan identitas pelapor.
                 </p>
                 <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="#" class="btn btn-primary btn-lg rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 fw-medium">
+                    <a href="{{ route('laporan.create') }}" class="btn btn-primary btn-lg rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 fw-medium">
                         Buat Laporan <i class="bi bi-arrow-right"></i>
                     </a>
                     <a href="#track" class="btn btn-outline-primary btn-lg rounded-pill px-4 py-2 fw-medium btn-track">
@@ -275,7 +275,7 @@
                     Email: wbssupport@bbspjekkp.go.id | Telp: (0274) 512929
                 </p>
                 <div class="d-flex justify-content-center flex-wrap gap-3 mt-5">
-                    <a href="#" class="btn btn-light btn-lg rounded-pill px-4 py-2 fw-medium">
+                    <a href="{{ route('laporan.create') }}" class="btn btn-light btn-lg rounded-pill px-4 py-2 fw-medium">
                         Buat Laporan Sekarang
                     </a>
                 </div>
