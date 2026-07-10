@@ -26,4 +26,24 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::create($data);
     }
+
+    public function getPaginated(int $perPage = 10, ?string $search = null)
+    {
+        $query = User::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('unit_kerja', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    public function delete(User $user): bool
+    {
+        return $user->delete();
+    }
 }

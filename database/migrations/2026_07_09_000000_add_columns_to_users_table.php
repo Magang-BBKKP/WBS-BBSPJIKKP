@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('unit_kerja')->nullable();
             $table->string('status')->default('active');
+            $table->boolean('is_active')->default(true);
         });
     }
 
@@ -36,6 +37,7 @@ return new class extends Migration
                 'phone_number',
                 'unit_kerja',
                 'status',
+                'is_active',
             ]);
         });
     }
