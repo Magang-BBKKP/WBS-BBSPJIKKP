@@ -16,6 +16,11 @@ Route::prefix('laporan')->name('laporan.')->group(function () {
     Route::get('/sukses', [LaporanController::class, 'success'])->name('sukses');
 });
 
+// Placeholder for tracking route to prevent errors
+Route::get('/tracking', function() {
+    return "Halaman Pelacakan (Sedang dalam pengembangan)";
+})->name('tracking.index');
+
 // Guest Routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
