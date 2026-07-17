@@ -89,7 +89,95 @@ DB::transaction(function () {
         'sender_type' => 'investigator',
         'content'     => '[PERMINTAAN KLARIFIKASI TIM WBS]: Mohon sebutkan nama oknum petugas sertifikasi yang meminta biaya tambahan tersebut.',
     ]);
+
+    // 4. Create Investigator User
+    $investigator = User::firstOrCreate(
+        ['email' => 'investigator@bbspjikkp.go.id'],
+        [
+            'name'      => 'Ahmad Investigator',
+            'password'  => Hash::make('Investigator123'),
+            'is_active' => true,
+            'status'    => 'active',
+        ]
+    );
+    $investigator->syncRoles([]);
+    $investigator->assignRole('investigator');
+
+    // 5. Create Kepala BBSPJIKKP User
+    $kepala = User::firstOrCreate(
+        ['email' => 'kepala@bbspjikkp.go.id'],
+        [
+            'name'      => 'Dr. H. Budi Santoso, M.Si.',
+            'password'  => Hash::make('Kepala123'),
+            'is_active' => true,
+            'status'    => 'active',
+        ]
+    );
+    $kepala->syncRoles([]);
+    $kepala->assignRole('kepala-bbspjikkp');
+
+    // 6. Create report l3 that is verified and in investigation status
+    $l3 = Laporan::firstOrCreate(
+        ['nomor_registrasi' => 'WBS-2026-00003'],
+        [
+            'tracking_token'   => 'WBS-TOKEN-3333',
+            'kategori_id'      => 1, // Korupsi
+            'judul'            => 'Dugaan Mark Up Anggaran Boiler Gedung Produksi',
+            'deskripsi'        => 'Ditemukan adanya indikasi mark up harga suku cadang boiler sebesar 40% pada proyek perawatan mesin berkala tahun 2025/2026.',
+            'status'           => 'investigasi',
+            'verification_status' => 'verified',
+            'verified_by'      => $wbsUser->id,
+            'verified_at'      => now(),
+            'is_anonim'        => true,
+            'tanggal_kejadian' => '2026-06-15',
+            'lokasi'           => 'Gedung Produksi Utama',
+        ]
+    );
+
+    $l3->timelines()->delete();
+    LaporanTimeline::create([
+        'laporan_id'  => $l3->id,
+        'status'      => 'menunggu',
+        'title'       => 'Laporan Diterima',
+        'description' => 'Laporan telah diterima dan masuk ke sistem.'
+    ]);
+    LaporanTimeline::create([
+        'laporan_id'  => $l3->id,
+        'status'      => 'verifikasi',
+        'title'       => 'Laporan Ditinjau',
+        'description' => 'Laporan sedang ditinjau oleh Tim WBS.'
+    ]);
+    LaporanTimeline::create([
+        'laporan_id'  => $l3->id,
+        'status'      => 'valid',
+        'title'       => 'Laporan Terverifikasi',
+        'description' => 'Laporan Anda dinyatakan valid oleh Tim WBS.'
+    ]);
+    LaporanTimeline::create([
+        'laporan_id'  => $l3->id,
+        'status'      => 'investigasi',
+        'title'       => 'Dalam Investigasi',
+        'description' => 'Kepala BBSPJIKKP telah membentuk Tim Investigasi untuk menangani aduan ini.'
+    ]);
+
+    // 7. Create Investigation record
+    $investigation = \App\Models\Investigation::firstOrCreate(
+        ['laporan_id' => $l3->id],
+        [
+            'investigator_id' => $investigator->id,
+            'status'          => 'active',
+        ]
+    );
+
+    $investigation->timelines()->delete();
+    \App\Models\InvestigationTimeline::create([
+        'investigation_id' => $investigation->id,
+        'description'      => 'Investigasi resmi dimulai oleh Tim Investigator.',
+        'date'             => now()->subDays(2),
+    ]);
 });
 
 echo "Temporary seeding completed successfully!\n";
 echo "Tim WBS user: wbs@bbspjikkp.go.id / Wbs@bbspjikkp123\n";
+echo "Investigator: investigator@bbspjikkp.go.id / Investigator123\n";
+echo "Kepala: kepala@bbspjikkp.go.id / Kepala123\n";

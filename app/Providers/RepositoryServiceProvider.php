@@ -20,6 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\LaporanRepositoryInterface::class,
             \App\Repositories\LaporanRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Contracts\InvestigationRepositoryInterface::class,
+            \App\Repositories\InvestigationRepository::class
+        );
     }
 
     /**

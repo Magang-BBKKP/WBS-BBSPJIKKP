@@ -114,7 +114,6 @@ class RolePermissionSeeder extends Seeder
         $investigator->syncPermissions([
             'view-laporan',
             'update-laporan',
-            'view-verifikasi',
             'view-investigasi',
             'create-investigasi',
             'update-investigasi',

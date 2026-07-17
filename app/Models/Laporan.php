@@ -103,4 +103,9 @@ class Laporan extends Model
     {
         return $this->hasMany(LaporanMessage::class, 'laporan_id');
     }
+
+    public function investigation()
+    {
+        return $this->hasOne(Investigation::class, 'laporan_id');
+    }
 }
