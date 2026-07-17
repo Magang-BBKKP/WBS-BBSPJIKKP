@@ -173,9 +173,15 @@
                             </a>
                             @endcan
                             
-                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
-                                <i class="bi bi-shield-check"></i> Investigasi
+                            @can('view-investigasi')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('investigations.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('investigations.index') }}">
+                                <i class="bi bi-search"></i> Investigasi
                             </a>
+                            @else
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
+                                <i class="bi bi-search"></i> Investigasi
+                            </a>
+                            @endcan
 
                             <!-- User Management -->
                             @can('view-user')

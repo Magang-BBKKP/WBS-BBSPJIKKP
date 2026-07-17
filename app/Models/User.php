@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(AuditLog::class);
     }
+
+    public function investigations()
+    {
+        return $this->hasMany(Investigation::class, 'investigator_id');
+    }
 }

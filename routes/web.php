@@ -65,4 +65,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/verifikasi/{id}/clarify', [\App\Http\Controllers\VerificationController::class, 'clarifyReport'])->name('verifikasi.clarify');
         Route::post('/verifikasi/{id}/reject', [\App\Http\Controllers\VerificationController::class, 'rejectReport'])->name('verifikasi.reject');
     });
+
+    // Investigasi (Investigators and Super Admins)
+    Route::resource('investigations', \App\Http\Controllers\InvestigationController::class)->only(['index', 'show']);
+    Route::post('investigations/{id}/timeline', [\App\Http\Controllers\InvestigationController::class, 'storeTimeline'])->name('investigations.store-timeline');
+    Route::post('investigations/{id}/document', [\App\Http\Controllers\InvestigationController::class, 'storeDocument'])->name('investigations.store-document');
+    Route::get('investigations/{id}/document/{docId}/download', [\App\Http\Controllers\InvestigationController::class, 'downloadDocument'])->name('investigations.download-document');
+    Route::post('investigations/{id}/result', [\App\Http\Controllers\InvestigationController::class, 'updateResult'])->name('investigations.update-result');
 });
