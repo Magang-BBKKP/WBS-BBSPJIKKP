@@ -56,4 +56,13 @@ Route::middleware('auth')->group(function () {
         Route::patch('/', [ProfileController::class, 'update'])->name('update');
         Route::put('/password', [ProfileController::class, 'changePassword'])->name('password');
     });
+
+    // Verification Laporan (Tim WBS only)
+    Route::middleware([\App\Http\Middleware\EnsureUserIsTimWbs::class])->group(function () {
+        Route::get('/verifikasi', [\App\Http\Controllers\VerificationController::class, 'index'])->name('verifikasi.index');
+        Route::get('/verifikasi/{id}', [\App\Http\Controllers\VerificationController::class, 'show'])->name('verifikasi.show');
+        Route::post('/verifikasi/{id}/validate', [\App\Http\Controllers\VerificationController::class, 'validateReport'])->name('verifikasi.validate');
+        Route::post('/verifikasi/{id}/clarify', [\App\Http\Controllers\VerificationController::class, 'clarifyReport'])->name('verifikasi.clarify');
+        Route::post('/verifikasi/{id}/reject', [\App\Http\Controllers\VerificationController::class, 'rejectReport'])->name('verifikasi.reject');
+    });
 });

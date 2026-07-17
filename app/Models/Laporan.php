@@ -28,11 +28,18 @@ class Laporan extends Model
         'telepon_pelapor',
         'status',
         'catatan_admin',
+        'verification_status',
+        'verified_by',
+        'verified_at',
+        'verification_note',
+        'clarification_message',
+        'rejection_reason',
     ];
 
     protected $casts = [
         'is_anonim'        => 'boolean',
         'tanggal_kejadian' => 'date',
+        'verified_at'      => 'datetime',
     ];
 
     // Status constants
@@ -48,7 +55,7 @@ class Laporan extends Model
         return [
             self::STATUS_MENUNGGU    => ['label' => 'Menunggu Verifikasi', 'color' => 'warning'],
             self::STATUS_VERIFIKASI  => ['label' => 'Sedang Diverifikasi', 'color' => 'info'],
-            self::STATUS_VALID       => ['label' => 'Laporan Valid',       'color' => 'primary'],
+            self::STATUS_VALID       => ['label' => 'Terverifikasi',       'color' => 'primary'],
             self::STATUS_DITOLAK     => ['label' => 'Ditolak',             'color' => 'danger'],
             self::STATUS_INVESTIGASI => ['label' => 'Dalam Investigasi',   'color' => 'dark'],
             self::STATUS_SELESAI     => ['label' => 'Selesai',             'color' => 'success'],
@@ -57,11 +64,17 @@ class Laporan extends Model
 
     public function getStatusLabelAttribute(): string
     {
+        if ($this->verification_status === 'waiting_clarification') {
+            return 'Menunggu Klarifikasi';
+        }
         return self::statusLabel()[$this->status]['label'] ?? $this->status;
     }
 
     public function getStatusColorAttribute(): string
     {
+        if ($this->verification_status === 'waiting_clarification') {
+            return 'info';
+        }
         return self::statusLabel()[$this->status]['color'] ?? 'secondary';
     }
 
@@ -69,6 +82,11 @@ class Laporan extends Model
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function verifiedBy()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 
     public function buktis()

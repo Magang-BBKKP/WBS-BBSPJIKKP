@@ -162,10 +162,16 @@
                                 <i class="bi bi-grid-fill"></i> Dashboard
                             </a>
                             
-                            <!-- Placeholder menus for WBS Modules (Step 1 requirement) -->
+                            <!-- Verification Menu (Tim WBS only) -->
+                            @can('view-verifikasi')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('verifikasi.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('verifikasi.index') }}">
+                                <i class="bi bi-shield-check"></i> Verifikasi Laporan
+                            </a>
+                            @else
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
                                 <i class="bi bi-file-earmark-text"></i> Laporan Masuk
                             </a>
+                            @endcan
                             
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
                                 <i class="bi bi-shield-check"></i> Investigasi
