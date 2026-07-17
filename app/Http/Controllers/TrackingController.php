@@ -104,11 +104,29 @@ class TrackingController extends Controller
             'message' => 'required|string|max:2000',
         ]);
 
-        $msg = LaporanMessage::create([
-            'laporan_id' => $laporan->id,
-            'sender_type' => 'pelapor',
-            'content' => $request->message,
-        ]);
+        $msg = \Illuminate\Support\Facades\DB::transaction(function () use ($laporan, $request) {
+            $msg = LaporanMessage::create([
+                'laporan_id' => $laporan->id,
+                'sender_type' => 'pelapor',
+                'content' => $request->message,
+            ]);
+
+            if ($laporan->verification_status === 'waiting_clarification') {
+                $laporan->update([
+                    'status' => Laporan::STATUS_MENUNGGU,
+                    'verification_status' => 'submitted',
+                ]);
+
+                \App\Models\LaporanTimeline::create([
+                    'laporan_id' => $laporan->id,
+                    'status' => Laporan::STATUS_MENUNGGU,
+                    'title' => 'Jawaban Klarifikasi Dikirim',
+                    'description' => 'Pelapor mengirimkan tanggapan klarifikasi. Laporan dikembalikan ke antrean verifikasi.',
+                ]);
+            }
+
+            return $msg;
+        });
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
