@@ -157,40 +157,84 @@
                         </div>
 
                         <!-- Sidebar menu links -->
-                        <div class="nav flex-column nav-pills gap-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <div class="nav flex-column nav-pills gap-1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('dashboard') ? 'active' : 'bg-hover-light' }}" href="{{ route('dashboard') }}">
                                 <i class="bi bi-grid-fill"></i> Dashboard
                             </a>
-                            
-                            <!-- Verification Menu (Tim WBS only) -->
+
+                            {{-- Laporan Saya (Pelapor / user biasa) --}}
+                            @if(!auth()->user()->hasAnyRole(['super-admin','tim-wbs','investigator','kepala-bbspjikkp']))
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('laporan.saya') ? 'active' : 'bg-hover-light' }}" href="{{ route('laporan.saya') }}">
+                                <i class="bi bi-file-earmark-person"></i> Laporan Saya
+                            </a>
+                            @endif
+
+                            {{-- Verifikasi (Tim WBS) --}}
                             @can('view-verifikasi')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('verifikasi.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('verifikasi.index') }}">
                                 <i class="bi bi-shield-check"></i> Verifikasi Laporan
                             </a>
-                            @else
-                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
-                                <i class="bi bi-file-earmark-text"></i> Laporan Masuk
-                            </a>
                             @endcan
-                            
-                            @can('view-investigasi')
-                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('investigations.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('investigations.index') }}">
-                                <i class="bi bi-search"></i> Investigasi
-                            </a>
-                            @else
-                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 bg-hover-light disabled text-muted" href="#" tabindex="-1" aria-disabled="true" style="opacity: 0.65;">
-                                <i class="bi bi-search"></i> Investigasi
+
+                            {{-- Pembentukan Tim Investigasi (Kepala & Super Admin) --}}
+                            @can('approve-investigasi')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('kepala.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('kepala.index') }}">
+                                <i class="bi bi-person-check"></i> Pembentukan Tim Investigasi
                             </a>
                             @endcan
 
-                            <!-- User Management -->
+                            {{-- Investigasi --}}
+                            @hasanyrole('investigator|super-admin')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('investigations.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('investigations.index') }}">
+                                <i class="bi bi-search"></i> Investigasi
+                            </a>
+                            @endhasanyrole
+
+                            {{-- Tindak Lanjut (Kepala & Super Admin) --}}
+                            @can('view-tindak-lanjut')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('tindak-lanjut.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('tindak-lanjut.index') }}">
+                                <i class="bi bi-clipboard2-check"></i> Tindak Lanjut
+                            </a>
+                            @endcan
+
+                            {{-- Monitoring --}}
+                            @can('view-monitoring')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('monitoring.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('monitoring.index') }}">
+                                <i class="bi bi-bar-chart-line"></i> Monitoring
+                            </a>
+                            @endcan
+
+                            <hr class="my-1 text-muted">
+
+                            {{-- User Management --}}
                             @can('view-user')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('users.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('users.index') }}">
                                 <i class="bi bi-people"></i> User Management
                             </a>
                             @endcan
 
-                            <hr class="my-2 text-muted">
+                            {{-- Master Data --}}
+                            @can('view-master-data')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('master-data.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('master-data.index') }}">
+                                <i class="bi bi-database"></i> Master Data
+                            </a>
+                            @endcan
+
+                            {{-- Audit Log --}}
+                            @can('view-audit-log')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('audit-log.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('audit-log.index') }}">
+                                <i class="bi bi-journal-text"></i> Audit Log
+                            </a>
+                            @endcan
+
+                            {{-- Pengaturan Sistem --}}
+                            @can('view-settings')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('settings.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('settings.index') }}">
+                                <i class="bi bi-gear"></i> Pengaturan Sistem
+                            </a>
+                            @endcan
+
+                            <hr class="my-1 text-muted">
 
                             <!-- Profile Settings -->
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('profile.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('profile.edit') }}">

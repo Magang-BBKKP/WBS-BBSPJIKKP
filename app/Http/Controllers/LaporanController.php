@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLaporanRequest;
 use App\Models\Kategori;
+use App\Models\Laporan;
 use App\Services\LaporanService;
 use Illuminate\Http\Request;
 
@@ -62,5 +63,22 @@ class LaporanController extends Controller
         $isAnonim = session()->pull('laporan_is_anonim');
 
         return view('laporan.success', compact('nomor', 'token', 'isAnonim'));
+    }
+
+    /**
+     * Laporan Saya — daftar laporan milik pelapor yang sedang login.
+     * Route: GET /laporan/saya
+     */
+    public function myReports(Request $request)
+    {
+        $user = auth()->user();
+
+        $query = Laporan::with('kategori')
+            ->where('email_pelapor', $user->email)
+            ->orderBy('created_at', 'desc');
+
+        $laporans = $query->paginate(10);
+
+        return view('laporan.saya', compact('laporans'));
     }
 }

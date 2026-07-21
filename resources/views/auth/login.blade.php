@@ -10,14 +10,14 @@
         <p class="auth-subtitle">Silakan masuk menggunakan akun yang telah terdaftar.</p>
     </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" autocomplete="off">
         @csrf
 
         <div class="mb-3">
             <div class="text-secondary small mb-1">Email</div>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="nama@contoh.com" required autofocus autocomplete="username">
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="nama@contoh.com" required autofocus autocomplete="off">
             </div>
             @error('email')
                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -33,7 +33,7 @@
             </div>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="••••••••••••" required autocomplete="current-password">
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="••••••••••••" required autocomplete="new-password">
                 <button class="btn-toggle-password" type="button" id="togglePassword">
                     <i class="bi bi-eye"></i>
                 </button>
