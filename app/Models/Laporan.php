@@ -78,6 +78,36 @@ class Laporan extends Model
         return self::statusLabel()[$this->status]['color'] ?? 'secondary';
     }
 
+    public function getNamaPelaporAttribute($value)
+    {
+        return $this->is_anonim ? 'Anonim' : ($value ?? '-');
+    }
+
+    public function getEmailPelaporAttribute($value)
+    {
+        return $this->is_anonim ? 'Anonim' : ($value ?? '-');
+    }
+
+    public function getTeleponPelaporAttribute($value)
+    {
+        return $this->is_anonim ? 'Anonim' : ($value ?? '-');
+    }
+
+    public function getRealNamaPelaporAttribute()
+    {
+        return $this->getRawOriginal('nama_pelapor');
+    }
+
+    public function getRealEmailPelaporAttribute()
+    {
+        return $this->getRawOriginal('email_pelapor');
+    }
+
+    public function getRealTeleponPelaporAttribute()
+    {
+        return $this->getRawOriginal('telepon_pelapor');
+    }
+
     // Relations
     public function kategori()
     {

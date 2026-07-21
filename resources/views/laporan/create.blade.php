@@ -181,19 +181,19 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Nama Lengkap <span class="required-star">*</span></label>
                                         <input type="text" name="nama_pelapor" class="form-control @error('nama_pelapor') is-invalid @enderror"
-                                            placeholder="Nama lengkap Anda" value="{{ old('nama_pelapor') }}">
+                                            placeholder="Nama lengkap Anda" value="{{ old('nama_pelapor', auth()->user()->name) }}">
                                         @error('nama_pelapor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Email <span class="required-star">*</span></label>
                                         <input type="email" name="email_pelapor" class="form-control @error('email_pelapor') is-invalid @enderror"
-                                            placeholder="email@contoh.com" value="{{ old('email_pelapor') }}">
+                                            placeholder="email@contoh.com" value="{{ old('email_pelapor', auth()->user()->email) }}">
                                         @error('email_pelapor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">No. Telepon</label>
                                         <input type="text" name="telepon_pelapor" class="form-control"
-                                            placeholder="08xx-xxxx-xxxx" value="{{ old('telepon_pelapor') }}">
+                                            placeholder="08xx-xxxx-xxxx" value="{{ old('telepon_pelapor', auth()->user()->phone_number) }}">
                                     </div>
                                 </div>
                             </div>

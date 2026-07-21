@@ -14,8 +14,8 @@
     
     <style>
         body {
-            background: linear-gradient(135deg, #0b1a30 0%, #061121 100%);
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+            color: #1e293b;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -29,13 +29,14 @@
             padding: 2rem;
         }
         .auth-card {
-            background-color: #e2e8f0; /* Light gray from reference */
-            border-radius: 12px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
             padding: 2.5rem;
             width: 100%;
             max-width: 450px;
             color: #1e293b;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(10, 66, 130, 0.05), 0 8px 10px -6px rgba(10, 66, 130, 0.05);
         }
         .auth-title {
             font-weight: 700;
@@ -47,12 +48,17 @@
             color: #475569;
             margin-bottom: 1.5rem;
         }
-        .form-control, .form-control:focus {
+        .form-control {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
             padding: 0.75rem 1rem 0.75rem 2.5rem; /* Padding for left icon */
             border-radius: 8px;
             box-shadow: none;
+            color: #1e293b;
+        }
+        .form-control:focus {
+            border-color: #0a4282;
+            box-shadow: 0 0 0 3px rgba(10, 66, 130, 0.1);
         }
         .input-group-text {
             background: transparent;
@@ -78,60 +84,63 @@
             color: #64748b;
         }
         .btn-primary {
-            background-color: #0f172a; /* Dark blue button */
-            border-color: #0f172a;
+            background-color: #0a4282; /* Deep blue matching project theme */
+            border-color: #0a4282;
             padding: 0.75rem;
             border-radius: 8px;
             font-weight: 600;
             width: 100%;
+            transition: all 0.2s ease-in-out;
         }
         .btn-primary:hover {
-            background-color: #1e293b;
-            border-color: #1e293b;
+            background-color: #083569;
+            border-color: #083569;
+            transform: translateY(-1px);
         }
         .footer-links {
             font-size: 0.85rem;
-            color: #94a3b8;
+            color: #64748b;
         }
         .footer-links a {
-            color: #94a3b8;
+            color: #0a4282;
             text-decoration: none;
+            font-weight: 500;
         }
         .footer-links a:hover {
-            color: #e2e8f0;
+            text-decoration: underline;
         }
         .header-logo {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .header-logo h1 {
             font-size: 1.75rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #0a4282;
         }
         .header-logo p {
-            color: #94a3b8;
+            color: #64748b;
             font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="main-container flex-column">
+    <div class="main-container flex-column py-5">
         
         <div class="header-logo">
-            <h1><i class="bi bi-shield-check me-2"></i> WBS Government</h1>
-            <p class="mb-0 text-center">Secure Integrity Portal. Your identity is protected by<br>state-grade encryption protocols.</p>
+            <h1><i class="bi bi-shield-check me-2"></i> WBS BBSPJIKKP</h1>
+            <p class="mb-0 text-center">Sistem Whistleblowing (WBS) BBSPJIKKP<br>Berintegritas • Siap Melayani • Hebat Tanpa Korupsi</p>
         </div>
 
         @yield('content')
 
         <div class="mt-4 text-center footer-links w-100" style="max-width: 500px;">
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div><i class="bi bi-shield-check"></i> ISO 27001<br>Certified</div>
-                <div><i class="bi bi-shield-lock"></i> 256-bit<br>AES</div>
-                <div>&copy; 2024</div>
-                <div><a href="#">Privacy<br>Policy</a></div>
-                <div>&bull; <a href="#">Accessibility</a></div>
+            <div class="d-flex justify-content-center gap-3 align-items-center flex-wrap">
+                <div><i class="bi bi-shield-check"></i> ISO 27001 Certified</div>
+                <span>&bull;</span>
+                <div><i class="bi bi-shield-lock"></i> AES 256-bit</div>
+                <span>&bull;</span>
+                <div>&copy; 2026 BBSPJIKKP</div>
             </div>
         </div>
     </div>

@@ -11,13 +11,6 @@ use App\Http\Controllers\DashboardController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
 
-// ── Public: Pelaporan (tidak perlu login) ──────────────────
-Route::prefix('laporan')->name('laporan.')->group(function () {
-    Route::get('/buat',   [LaporanController::class, 'create'])->name('create');
-    Route::post('/buat',  [LaporanController::class, 'store'])->name('store');
-    Route::get('/sukses', [LaporanController::class, 'success'])->name('sukses');
-});
-
 // Tracking Routes
 Route::get('/track', [TrackingController::class, 'index'])->name('track.index');
 Route::post('/track', [TrackingController::class, 'search'])->name('track.search');
@@ -46,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Pelaporan (wajib login)
+    Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/buat',   [LaporanController::class, 'create'])->name('create');
+        Route::post('/buat',  [LaporanController::class, 'store'])->name('store');
+        Route::get('/sukses', [LaporanController::class, 'success'])->name('sukses');
+    });
 
     // User Management
     Route::patch('/users/{user}/toggle-status', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->name('users.toggle-status');
