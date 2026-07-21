@@ -15,8 +15,8 @@ class EnsureUserIsTimWbs
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || !auth()->user()->hasRole('tim-wbs')) {
-            abort(403, 'Hanya pengguna dengan role Tim WBS yang dapat mengakses halaman ini.');
+        if (!auth()->check() || !auth()->user()->hasAnyRole(['tim-wbs', 'super-admin'])) {
+            abort(403, 'Hanya pengguna dengan role Tim WBS atau Super Admin yang dapat mengakses halaman ini.');
         }
 
         return $next($request);

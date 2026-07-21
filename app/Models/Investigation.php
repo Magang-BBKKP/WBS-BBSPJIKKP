@@ -12,9 +12,15 @@ class Investigation extends Model
     protected $fillable = [
         'laporan_id',
         'investigator_id',
+        'assigned_by',
+        'assigned_at',
         'status',
         'final_result',
         'recommendation',
+    ];
+
+    protected $casts = [
+        'assigned_at' => 'datetime',
     ];
 
     // Status Constants
@@ -71,5 +77,21 @@ class Investigation extends Model
     public function documents()
     {
         return $this->hasMany(InvestigationDocument::class, 'investigation_id');
+    }
+
+    /**
+     * Relationship with the user who assigned the investigator.
+     */
+    public function assignedBy()
+    {
+        return $this->belongsTo(User::class, 'assigned_by');
+    }
+
+    /**
+     * Relationship with tindak lanjut.
+     */
+    public function tindakLanjut()
+    {
+        return $this->hasOne(TindakLanjut::class, 'investigation_id');
     }
 }

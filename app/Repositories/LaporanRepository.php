@@ -14,21 +14,17 @@ class LaporanRepository extends BaseRepository implements LaporanRepositoryInter
     }
 
     /**
-     * Generate nomor registrasi unik: WBS-YYYY-NNNNN
+     * Generate nomor registrasi unik: WBS-XXXX-XXXX (random alphanumeric)
      */
     public function generateNomorRegistrasi(): string
     {
-        $year  = now()->year;
-        $prefix = "WBS-{$year}-";
+        do {
+            $part1 = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4));
+            $part2 = strtoupper(substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4));
+            $nomor = "WBS-{$part1}-{$part2}";
+        } while (Laporan::where('nomor_registrasi', $nomor)->exists());
 
-        $last = Laporan::where('nomor_registrasi', 'like', "{$prefix}%")
-            ->orderByDesc('id')
-            ->value('nomor_registrasi');
-
-        $lastNumber = $last ? (int) substr($last, -5) : 0;
-        $newNumber  = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
-
-        return $prefix . $newNumber;
+        return $nomor;
     }
 
     /**

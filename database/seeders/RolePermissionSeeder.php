@@ -90,36 +90,27 @@ class RolePermissionSeeder extends Seeder
         $superAdmin->syncPermissions(Permission::all());
 
         // --- Tim WBS ---
-        // Verifikasi laporan, monitoring, audit log
+        // Verifikasi laporan, klarifikasi, validitas, monitoring
         $timWbs = Role::firstOrCreate(['name' => 'tim-wbs']);
         $timWbs->syncPermissions([
             'view-laporan',
-            'create-laporan',
-            'update-laporan',
-            'approve-laporan',
+            'approve-laporan', // menentukan validitas
             'view-verifikasi',
             'create-verifikasi',
             'update-verifikasi',
-            'view-investigasi',
             'view-monitoring',
-            'view-master-data',
-            'view-audit-log',
             'view-notification',
             'view-dashboard',
         ]);
 
         // --- Investigator ---
-        // Menjalankan investigasi, upload dokumen, rekomendasi
+        // Melihat laporan, menjalankan investigasi, upload hasil, rekomendasi
         $investigator = Role::firstOrCreate(['name' => 'investigator']);
         $investigator->syncPermissions([
             'view-laporan',
-            'update-laporan',
             'view-investigasi',
             'create-investigasi',
             'update-investigasi',
-            'view-tindak-lanjut',
-            'view-monitoring',
-            'view-master-data',
             'view-notification',
             'view-dashboard',
         ]);
@@ -129,19 +120,17 @@ class RolePermissionSeeder extends Seeder
         $kepala = Role::firstOrCreate(['name' => 'kepala-bbspjikkp']);
         $kepala->syncPermissions([
             'view-laporan',
-            'approve-laporan',
             'view-verifikasi',
             'view-investigasi',
-            'approve-investigasi',
+            'approve-investigasi', // membentuk tim & menelaah
             'view-tindak-lanjut',
             'create-tindak-lanjut',
             'update-tindak-lanjut',
-            'view-monitoring',
-            'update-monitoring',
-            'view-audit-log',
-            'view-master-data',
             'view-notification',
             'view-dashboard',
         ]);
+
+        // Pastikan Super Admin punya semua permission (termasuk view-settings)
+        $superAdmin->syncPermissions(Permission::all());
     }
 }

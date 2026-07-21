@@ -26,7 +26,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
         <div class="container py-2">
-            <a class="navbar-brand fw-bold text-primary" href="#">
+            <a class="navbar-brand fw-bold text-primary" href="{{ route('home') }}">
                 WBS BBSPJIKKP
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -35,16 +35,16 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active fw-medium" href="#">Beranda</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('home') ? 'active text-primary' : 'text-muted' }}" href="{{ route('home') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium text-muted" href="{{ route('laporan.create') }}">Lapor</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('laporan.*') ? 'active text-primary' : 'text-muted' }}" href="{{ route('laporan.create') }}">Lapor</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium text-muted" href="{{ route('track.index') }}">Lacak</a>
+                        <a class="nav-link fw-medium {{ request()->routeIs('track.*') ? 'active text-primary' : 'text-muted' }}" href="{{ route('track.index') }}">Lacak</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium text-muted" href="#kontak">Kontak</a>
+                        <a class="nav-link fw-medium text-muted" href="{{ request()->routeIs('home') ? '#kontak' : route('home').'#kontak' }}">Kontak</a>
                     </li>
                 </ul>
             </div>
@@ -125,6 +125,52 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+        
+        if (isHomePage) {
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            const kontakSection = document.getElementById('kontak');
+            
+            function updateActiveState() {
+                const scrollPos = window.scrollY + (window.innerHeight / 2);
+                const isAtKontak = kontakSection && scrollPos >= kontakSection.offsetTop;
+                
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    
+                    if (href && href.includes('#kontak')) {
+                        if (isAtKontak) {
+                            link.classList.add('active', 'text-primary');
+                            link.classList.remove('text-muted');
+                        } else {
+                            link.classList.remove('active', 'text-primary');
+                            link.classList.add('text-muted');
+                        }
+                    } 
+                    else if (href === '{{ route("home") }}') {
+                        if (!isAtKontak) {
+                            link.classList.add('active', 'text-primary');
+                            link.classList.remove('text-muted');
+                        } else {
+                            link.classList.remove('active', 'text-primary');
+                            link.classList.add('text-muted');
+                        }
+                    }
+                });
+            }
+            
+            // Listeners
+            window.addEventListener('scroll', updateActiveState);
+            window.addEventListener('hashchange', updateActiveState);
+            
+            // Initial check in case loaded with hash
+            setTimeout(updateActiveState, 100);
+        }
+    });
+    </script>
+
     @stack('scripts')
 </body>
 </html>
