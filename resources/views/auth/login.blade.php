@@ -2,18 +2,22 @@
 
 @section('content')
 <div class="auth-card">
-    <h2 class="auth-title">Access Secure Terminal</h2>
-    <p class="auth-subtitle">Provide your official credentials to continue.</p>
+    <div class="text-center mb-4">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 56px; height: 56px; background-color: rgba(10, 66, 130, 0.1);">
+            <i class="bi bi-shield-lock-fill fs-3 text-primary"></i>
+        </div>
+        <h3 class="auth-title">Masuk</h3>
+        <p class="auth-subtitle">Silakan masuk menggunakan akun yang telah terdaftar.</p>
+    </div>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <div class="mb-3">
-            <label for="email" class="form-label d-none">Official ID / Government Email</label>
-            <div class="text-secondary small mb-1">Official ID / Government Email</div>
+            <div class="text-secondary small mb-1">Email</div>
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="e.g. ID-882931" required autofocus autocomplete="username">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="nama@contoh.com" required autofocus autocomplete="username">
             </div>
             @error('email')
                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -22,9 +26,9 @@
 
         <div class="mb-4">
             <div class="d-flex justify-content-between align-items-center mb-1">
-                <div class="text-secondary small">Access Password</div>
+                <div class="text-secondary small">Kata Sandi</div>
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="small text-decoration-none" style="color: #3b82f6;">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="small text-decoration-none" style="color: #0a4282; font-weight: 500;">Lupa Kata Sandi?</a>
                 @endif
             </div>
             <div class="input-group">
@@ -42,18 +46,18 @@
         <div class="mb-4 form-check">
             <input type="checkbox" class="form-check-input" id="remember_me" name="remember">
             <label class="form-check-label small text-secondary" for="remember_me">
-                Remember this terminal for 24 hours
+                Ingat Saya
             </label>
         </div>
 
         <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center w-100 text-white">
-            Authorize Session <i class="bi bi-arrow-right ms-2"></i>
+            Masuk <i class="bi bi-box-arrow-in-right ms-2"></i>
         </button>
     </form>
 
     <div class="mt-4 text-center">
-        <span class="small text-secondary">Belum punya akun?</span>
-        <a href="{{ route('register') }}" class="small text-decoration-none fw-bold" style="color: #3b82f6;">Sign Up untuk Pendaftaran</a>
+        <span class="small text-secondary">Belum memiliki akun?</span>
+        <a href="{{ route('register') }}" class="small text-decoration-none fw-bold" style="color: #0a4282;">Daftar Sekarang</a>
     </div>
 </div>
 @endsection

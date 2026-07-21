@@ -29,11 +29,18 @@ class LaporanService extends BaseService
             $data['nomor_registrasi'] = $this->laporanRepository->generateNomorRegistrasi();
             $data['tracking_token']   = $this->laporanRepository->generateTrackingToken();
 
-            // 2. Sanitize data anonim — hapus identitas jika anonim
-            if ($data['is_anonim'] ?? true) {
-                $data['nama_pelapor']     = null;
-                $data['email_pelapor']    = null;
-                $data['telepon_pelapor']  = null;
+            // 2. Simpan identitas asli pelapor di database dari user yang sedang login
+            $user = auth()->user();
+            if ($user) {
+                if ($data['is_anonim'] ?? false) {
+                    $data['nama_pelapor']    = $user->name;
+                    $data['email_pelapor']   = $user->email;
+                    $data['telepon_pelapor'] = $user->phone_number;
+                } else {
+                    $data['nama_pelapor']    = $data['nama_pelapor'] ?: $user->name;
+                    $data['email_pelapor']   = $data['email_pelapor'] ?: $user->email;
+                    $data['telepon_pelapor'] = $data['telepon_pelapor'] ?: $user->phone_number;
+                }
             }
 
             // 3. Simpan laporan

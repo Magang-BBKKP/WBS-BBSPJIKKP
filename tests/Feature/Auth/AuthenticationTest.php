@@ -19,9 +19,12 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
+        $this->artisan('db:seed', ['--class' => 'RolePermissionSeeder']);
+
         $user = User::factory()->create([
             'password' => bcrypt('password123'),
         ]);
+        $user->assignRole('super-admin');
 
         $response = $this->post('/login', [
             'email' => $user->email,

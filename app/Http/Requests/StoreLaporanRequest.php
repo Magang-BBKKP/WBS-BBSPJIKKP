@@ -67,7 +67,7 @@ class StoreLaporanRequest extends FormRequest
     {
         // Normalize checkbox boolean
         $this->merge([
-            'is_anonim' => $this->has('is_anonim') ? true : false,
+            'is_anonim' => $this->boolean('is_anonim'),
         ]);
     }
 }
