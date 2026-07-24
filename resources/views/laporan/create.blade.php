@@ -157,7 +157,7 @@
                                     <div class="form-check form-switch mb-0">
                                         <input class="form-check-input" type="checkbox" id="isAnonim"
                                             name="is_anonim" value="1"
-                                            {{ old('is_anonim', true) ? 'checked' : '' }}
+                                            {{ old('is_anonim', false) ? 'checked' : '' }}
                                             onchange="toggleAnonimFields(this)">
                                         <label class="form-check-label ms-2" for="isAnonim">
                                             <i class="bi bi-incognito me-1"></i> Lapor Secara Anonim
@@ -170,7 +170,7 @@
                             </div>
 
                             {{-- Identitas Pelapor (muncul jika tidak anonim) --}}
-                            <div class="col-12" id="identitasPelapor" style="{{ old('is_anonim', true) ? 'display:none' : '' }}">
+                            <div class="col-12" id="identitasPelapor" style="{{ old('is_anonim', false) ? 'display:none' : '' }}">
                                 <div class="row g-3">
                                     <div class="col-12 mt-1">
                                         <div class="d-flex align-items-center gap-2 mb-1">

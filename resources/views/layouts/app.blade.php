@@ -24,51 +24,99 @@
             --bs-dark-blue: #0b192c;
             --bs-light-blue: #f2f7ff;
             --bs-gray-text: #6c757d;
+            --sidebar-active-bg: linear-gradient(135deg, #0a4282, #185a9d);
+            --card-shadow: 0 10px 30px -5px rgba(10, 66, 130, 0.05), 0 4px 12px -2px rgba(10, 66, 130, 0.03);
+            --card-shadow-hover: 0 20px 40px -5px rgba(10, 66, 130, 0.1), 0 8px 20px -2px rgba(10, 66, 130, 0.05);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #fafbfe;
+            background-color: #f6f8fb;
             color: #2b3543;
         }
 
         .navbar {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 2px 15px rgba(10, 66, 130, 0.03);
         }
 
-        .bg-hover-light {
-            color: #495057 !important;
-            transition: all 0.2s ease;
+        .card {
+            border: none !important;
+            box-shadow: var(--card-shadow) !important;
+            border-radius: 16px !important;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .bg-hover-light:hover {
-            background-color: var(--bs-light-blue);
-            color: var(--bs-primary) !important;
-        }
-
-        .nav-pills .nav-link {
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-        }
-
-        .nav-pills .nav-link.active {
-            background-color: var(--bs-primary) !important;
-            color: #fff !important;
+        .card:hover {
+            box-shadow: var(--card-shadow-hover) !important;
         }
 
         /* Sidebar Styling */
         .sidebar {
             position: sticky;
             top: 90px;
+            border: 1px solid rgba(10, 66, 130, 0.05) !important;
         }
-        
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .bg-hover-light {
+            color: #495057 !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            border-left: 3px solid transparent;
+        }
+
+        .bg-hover-light:hover {
+            background-color: var(--bs-primary-soft);
+            color: var(--bs-primary) !important;
+            transform: translateX(4px);
+            border-left: 3px solid var(--bs-info);
+        }
+
+        .nav-pills .nav-link {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .nav-pills .nav-link i {
+            font-size: 1.1rem;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-pills .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-pills .nav-link.active {
+            background: var(--sidebar-active-bg) !important;
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(10, 66, 130, 0.25);
+            border-left: 3px solid var(--bs-info);
         }
 
         .btn {
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #083468;
+            border-color: #083468;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(10, 66, 130, 0.15);
         }
     </style>
     @stack('styles')
@@ -97,7 +145,7 @@
                                     {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}
                                 </div>
                             @endif
-                            <span class="d-none d-md-inline fw-medium" style="font-size: 0.95rem;">{{ auth()->user()->name }}</span>
+                            <span class="d-none d-md-inline fw-medium" style="font-size: 0.95rem;">{{ ucwords(auth()->user()->name) }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2" aria-labelledby="userMenuDropdown">
                             <li>
@@ -109,11 +157,6 @@
                             <li>
                                 <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="{{ route('profile.edit') }}">
                                     <i class="bi bi-person-gear"></i> Profil Saya
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="{{ route('home') }}">
-                                    <i class="bi bi-house"></i> Landing Page
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
@@ -139,28 +182,20 @@
                 <!-- Sidebar Sub-nav -->
                 <aside class="col-lg-3 col-md-4 mb-4">
                     <div class="card border-0 shadow-sm rounded-4 p-3 bg-white sidebar">
-                        <!-- User quick profile in sidebar -->
-                        <div class="d-flex align-items-center gap-3 mb-4 p-2 pb-3 border-bottom">
-                            @if(auth()->user()->profile_photo)
-                                <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="Profile" class="rounded-circle object-fit-cover shadow-sm" style="width: 48px; height: 48px;">
-                            @else
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 48px; height: 48px; font-size: 1.2rem;">
-                                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}
-                                </div>
-                            @endif
-                            <div class="overflow-hidden">
-                                <h6 class="mb-0 fw-bold text-dark text-truncate" style="font-size: 0.95rem;">{{ auth()->user()->name }}</h6>
-                                <span class="badge bg-primary-soft text-primary small fw-semibold text-capitalize" style="font-size: 0.75rem;">
-                                    {{ auth()->user()->roles->first()->name ?? 'User' }}
-                                </span>
-                            </div>
-                        </div>
-
                         <!-- Sidebar menu links -->
                         <div class="nav flex-column nav-pills gap-1" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <!-- Pengaturan Profil -->
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('profile.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person-gear"></i> Pengaturan Profil
+                            </a>
+
+                            <hr class="my-2 text-muted opacity-25">
+
+                            @can('view-dashboard')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('dashboard') ? 'active' : 'bg-hover-light' }}" href="{{ route('dashboard') }}">
                                 <i class="bi bi-grid-fill"></i> Dashboard
                             </a>
+                            @endcan
 
                             {{-- Laporan Saya (Pelapor / user biasa) --}}
                             @if(!auth()->user()->hasAnyRole(['super-admin','tim-wbs','investigator','kepala-bbspjikkp']))
@@ -234,12 +269,7 @@
                             </a>
                             @endcan
 
-                            <hr class="my-1 text-muted">
 
-                            <!-- Profile Settings -->
-                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('profile.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('profile.edit') }}">
-                                <i class="bi bi-person-gear"></i> Pengaturan Profil
-                            </a>
                         </div>
                     </div>
                 </aside>
