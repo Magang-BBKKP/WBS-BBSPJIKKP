@@ -128,11 +128,11 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div>
                         <h5 class="fw-bold text-dark mb-1">Tren Pengaduan</h5>
-                        <p class="text-muted small mb-0">Jumlah laporan masuk per bulan selama 12 bulan terakhir</p>
+                        <p class="text-muted small mb-0">Jumlah laporan masuk per minggu selama 12 minggu terakhir</p>
                     </div>
                 </div>
                 <div style="position: relative; height: 300px; width: 100%;">
-                    <canvas id="monthlyTrendChart"></canvas>
+                    <canvas id="weeklyTrendChart"></canvas>
                 </div>
             </div>
         </div>
@@ -249,14 +249,14 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- 1. Line Chart (Tren Laporan Per Bulan) ---
-        const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+        // --- 1. Line Chart (Tren Laporan Per Minggu) ---
+        const weeklyTrendCtx = document.getElementById('weeklyTrendChart').getContext('2d');
         
         // Data dari backend
-        const trendLabels = @json($monthly_trends['labels']);
-        const trendData = @json($monthly_trends['data']);
+        const trendLabels = @json($weekly_trends['labels']);
+        const trendData = @json($weekly_trends['data']);
         
-        new Chart(monthlyTrendCtx, {
+        new Chart(weeklyTrendCtx, {
             type: 'line',
             data: {
                 labels: trendLabels,

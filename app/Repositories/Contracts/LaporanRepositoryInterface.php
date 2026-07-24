@@ -44,9 +44,9 @@ interface LaporanRepositoryInterface extends RepositoryInterface
     public function getRecentLaporan(int $limit = 5): Collection;
 
     /**
-     * Ambil data tren bulanan untuk chart (jumlah laporan per bulan)
+     * Ambil data tren mingguan untuk chart (jumlah laporan per minggu)
      */
-    public function getMonthlyTrends(int $months = 12): Collection;
+    public function getWeeklyTrends(int $weeks = 12): Collection;
 
     /**
      * Ambil data distribusi pelanggaran per kategori untuk chart
