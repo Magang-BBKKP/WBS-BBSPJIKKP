@@ -90,16 +90,25 @@ class LaporanRepository extends BaseRepository implements LaporanRepositoryInter
     }
 
     /**
-     * Ambil data tren bulanan untuk chart (jumlah laporan per bulan)
+     * Ambil data tren mingguan untuk chart (jumlah laporan per minggu)
      */
-    public function getMonthlyTrends(int $months = 12): Collection
+    public function getWeeklyTrends(int $weeks = 12): Collection
     {
-        $startDate = now()->subMonths($months - 1)->startOfMonth();
+        $startDate = now()->subWeeks($weeks - 1)->startOfWeek();
+        $driver = $this->model->getConnection()->getDriverName();
 
-        return $this->model->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, count(*) as total")
+        if ($driver === 'sqlite') {
+            return $this->model->selectRaw("date(created_at, 'weekday 0', '-6 days') as week, count(*) as total")
+                ->where('created_at', '>=', $startDate)
+                ->groupBy('week')
+                ->orderBy('week', 'asc')
+                ->get();
+        }
+
+        return $this->model->selectRaw("DATE_FORMAT(DATE_SUB(created_at, INTERVAL WEEKDAY(created_at) DAY), '%Y-%m-%d') as week, count(*) as total")
             ->where('created_at', '>=', $startDate)
-            ->groupBy('month')
-            ->orderBy('month', 'asc')
+            ->groupBy('week')
+            ->orderBy('week', 'asc')
             ->get();
     }
 

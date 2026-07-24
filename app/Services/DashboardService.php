@@ -20,7 +20,7 @@ class DashboardService extends BaseService
         return [
             'stats' => $this->getCardStats(),
             'recent_reports' => $this->getRecentReports(),
-            'monthly_trends' => $this->getMonthlyTrendData(),
+            'weekly_trends' => $this->getWeeklyTrendData(),
             'category_distribution' => $this->getCategoryDistributionData(),
             'progress' => $this->getProgressMetrics(),
         ];
@@ -48,23 +48,23 @@ class DashboardService extends BaseService
     }
 
     /**
-     * Mengambil data tren bulanan untuk chart (jumlah laporan per bulan)
-     * Melakukan padding untuk bulan yang tidak memiliki data (0 laporan)
+     * Mengambil data tren mingguan untuk chart (jumlah laporan per minggu)
+     * Melakukan padding untuk minggu yang tidak memiliki data (0 laporan)
      */
-    protected function getMonthlyTrendData(): array
+    protected function getWeeklyTrendData(): array
     {
-        $trends = $this->laporanRepository->getMonthlyTrends(12)->pluck('total', 'month')->toArray();
+        $trends = $this->laporanRepository->getWeeklyTrends(12)->pluck('total', 'week')->toArray();
         $labels = [];
         $data = [];
 
-        // Generasikan 12 bulan ke belakang dari bulan ini
+        // Generasikan 12 minggu ke belakang dari minggu ini
         for ($i = 11; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
-            $monthKey = $date->format('Y-m'); // Format pembanding database (e.g., "2026-07")
-            $monthLabel = $date->translatedFormat('M Y'); // Label visual (e.g., "Jul 2026")
+            $date = now()->subWeeks($i)->startOfWeek();
+            $weekKey = $date->format('Y-m-d'); // Format pembanding database (Monday of the week)
+            $weekLabel = $date->translatedFormat('d M'); // Label visual (e.g., "20 Jul")
 
-            $labels[] = $monthLabel;
-            $data[] = $trends[$monthKey] ?? 0;
+            $labels[] = $weekLabel;
+            $data[] = $trends[$weekKey] ?? 0;
         }
 
         return [
