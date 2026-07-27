@@ -1,0 +1,14 @@
+/.git
+/.github
+/node_modules
+/vendor
+/tests
+/storage/logs
+/storage/debugbar
+.env
+.env.*
+docker*
+PRD.md
+README.md
+*.sql
+*.zip
