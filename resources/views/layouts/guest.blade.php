@@ -127,9 +127,11 @@
 <body>
     <div class="main-container flex-column py-5">
         
-        <div class="header-logo">
-            <h1><i class="bi bi-shield-check me-2"></i> WBS BBSPJIKKP</h1>
-            <p class="mb-0 text-center">Sistem Whistleblowing (WBS) BBSPJIKKP<br>Berintegritas • Siap Melayani • Hebat Tanpa Korupsi</p>
+        <div class="header-logo text-center mb-4">
+            <a href="{{ route('home') }}" class="d-inline-block mb-3">
+                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 55px; width: auto;" class="img-fluid">
+            </a>
+            <p class="mb-0 text-center text-muted small">Sistem Whistleblowing (WBS) BBSPJIKKP<br>Berintegritas • Siap Melayani • Hebat Tanpa Korupsi</p>
         </div>
 
         @yield('content')

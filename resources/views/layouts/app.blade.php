@@ -126,8 +126,8 @@
     <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
         <div class="container py-2">
-            <a class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2" href="{{ route('home') }}">
-                <i class="bi bi-shield-check-fill fs-4"></i> WBS BBSPJIKKP
+            <a class="navbar-brand p-0 d-flex align-items-center" href="{{ route('home') }}">
+                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 40px; width: auto;" class="img-fluid">
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -135,6 +135,10 @@
             </button>
             
             <div class="d-flex align-items-center gap-3 ms-auto ms-lg-0 order-lg-last">
+                <button type="button" class="btn btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center p-2 text-primary border" data-bs-toggle="offcanvas" data-bs-target="#accessibilityOffcanvas" title="Fitur Aksesibilitas" style="width: 36px; height: 36px;">
+                    <i class="bi bi-universal-access fs-5"></i>
+                </button>
+
                 @auth
                     <div class="dropdown">
                         <button class="btn btn-link text-decoration-none dropdown-toggle text-dark d-flex align-items-center gap-2 p-0" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -269,7 +273,6 @@
                             </a>
                             @endcan
 
-
                         </div>
                     </div>
                 </aside>
@@ -281,6 +284,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Accessibility Widget Include -->
+    @include('partials.accessibility-widget')
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
