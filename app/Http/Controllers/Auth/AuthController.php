@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -28,6 +29,43 @@ class AuthController extends Controller
     public function showRegister()
     {
         return view('auth.register');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback(Request $request)
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Gagal masuk dengan Google. Silakan coba lagi.',
+            ]);
+        }
+
+        try {
+            $user = $this->authService->loginWithGoogle([
+                'id' => $googleUser->getId(),
+                'email' => $googleUser->getEmail(),
+                'name' => $googleUser->getName(),
+                'avatar' => $googleUser->getAvatar(),
+            ], $request->ip(), $request->userAgent());
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors([
+                'email' => $e->getMessage(),
+            ]);
+        }
+
+        $request->session()->regenerate();
+
+        if ($user && $user->can('view-dashboard')) {
+            return redirect()->route('dashboard');
+        }
+
+        return redirect()->route('home');
     }
 
     public function register(RegisterRequest $request)

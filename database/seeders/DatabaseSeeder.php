@@ -22,7 +22,10 @@ class DatabaseSeeder extends Seeder
         // 2. Seed Kategori Pelanggaran
         $this->call(KategoriSeeder::class);
 
-        // 2. Buat Super Admin default
+        // 3. Seed Master Data tambahan sesuai PRD
+        $this->call(MasterDataItemSeeder::class);
+
+        // 4. Buat Super Admin default
         $superAdmin = User::firstOrCreate(
             ['email' => 'admin@bbspjikkp.go.id'],
             [
@@ -34,7 +37,7 @@ class DatabaseSeeder extends Seeder
         );
         $superAdmin->assignRole('super-admin');
 
-        // 3. Buat Tim WBS default
+        // 5. Buat Tim WBS default
         $timWbs = User::firstOrCreate(
             ['email' => 'timwbs@bbspjikkp.go.id'],
             [
@@ -46,7 +49,7 @@ class DatabaseSeeder extends Seeder
         );
         $timWbs->assignRole('tim-wbs');
 
-        // 4. Buat Investigator default
+        // 6. Buat Investigator default
         $investigator = User::firstOrCreate(
             ['email' => 'investigator@bbspjikkp.go.id'],
             [
@@ -58,7 +61,7 @@ class DatabaseSeeder extends Seeder
         );
         $investigator->assignRole('investigator');
 
-        // 5. Buat Kepala BBSPJIKKP default
+        // 7. Buat Kepala BBSPJIKKP default
         $kepala = User::firstOrCreate(
             ['email' => 'kepala@bbspjikkp.go.id'],
             [

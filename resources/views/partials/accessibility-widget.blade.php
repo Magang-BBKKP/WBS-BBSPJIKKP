@@ -4,7 +4,7 @@
         var s = d.createElement("script");
         /* Load UserWay official CDN Widget Script API */
         s.setAttribute("data-account", "0m4b35W8A1");
-        s.setAttribute("data-position", "4");
+        s.setAttribute("data-position", "3");
         s.setAttribute("src", "https://cdn.userway.org/widget.js");
         (d.body || d.head).appendChild(s);
     })(document);

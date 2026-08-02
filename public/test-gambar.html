@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Test Gambar BBSPJIKKP</title>
+<style>
+body { font-family: sans-serif; padding: 20px; background: #f0f4ff; }
+.test-block { margin: 20px 0; padding: 15px; background: white; border-radius: 8px; }
+img { border: 2px solid #333; }
+h2 { color: #0a4282; }
+</style>
+</head>
+<body>
+<h1>Test Gambar BBSPJIKKP</h1>
+
+<div class="test-block">
+    <h2>1. Logo Header (logo-bbspjikkp.png)</h2>
+    <img src="/images/logo-bbspjikkp.png" alt="Logo" style="height: 60px;" onerror="this.style.border='3px solid red'; this.alt='GAGAL LOAD';">
+    <p>URL: <code>http://localhost:8000/images/logo-bbspjikkp.png</code></p>
+</div>
+
+<div class="test-block">
+    <h2>2. Gambar Gedung (gedung-bbspjikkp.jpg)</h2>
+    <img src="/images/gedung-bbspjikkp.jpg" alt="Gedung" style="max-width: 400px; height: 250px; object-fit: cover;" onerror="this.style.border='3px solid red'; this.alt='GAGAL LOAD';">
+    <p>URL: <code>http://localhost:8000/images/gedung-bbspjikkp.jpg</code></p>
+</div>
+
+<div class="test-block">
+    <h2>Status</h2>
+    <div id="status">Memeriksa...</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imgs = document.querySelectorAll('img');
+    let results = [];
+    imgs.forEach(function(img) {
+        results.push(img.alt + ': ' + (img.complete && img.naturalWidth > 0 ? '✅ TAMPIL OK ('+img.naturalWidth+'x'+img.naturalHeight+'px)' : '❌ GAGAL'));
+    });
+    document.getElementById('status').innerHTML = results.join('<br>');
+});
+</script>
+</body>
+</html>
