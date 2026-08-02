@@ -56,6 +56,48 @@ class AuthService
         Auth::logout();
     }
 
+    public function loginWithGoogle(array $userData, string $ip, string $userAgent): User
+    {
+        $email = $userData['email'];
+
+        $user = $this->userRepository->findByEmail($email);
+
+        if ($user) {
+            $this->userRepository->update($user, [
+                'google_id' => $userData['id'],
+                'google_avatar' => $userData['avatar'] ?? $user->google_avatar,
+                'name' => $user->name ?? $userData['name'],
+            ]);
+        } else {
+            $user = $this->userRepository->create([
+                'name' => $userData['name'],
+                'email' => $email,
+                'email_verified_at' => now(),
+                'password' => null,
+                'google_id' => $userData['id'],
+                'google_avatar' => $userData['avatar'] ?? null,
+                'status' => 'active',
+                'is_active' => true,
+            ]);
+        }
+
+        if (!$user->is_active) {
+            throw new \Exception('Akun Anda telah dinonaktifkan.');
+        }
+
+        Auth::login($user, true);
+
+        $this->userRepository->update($user, [
+            'last_login_at' => now(),
+            'last_login_ip' => $ip,
+            'last_login_browser' => $userAgent,
+        ]);
+
+        $this->logActivity($user->id, 'Login', 'User logged in with Google.', $ip, $userAgent);
+
+        return $user;
+    }
+
     public function sendResetLink(array $data, string $ip, string $userAgent): string
     {
         $status = Password::sendResetLink($data);

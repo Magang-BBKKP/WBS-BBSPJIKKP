@@ -26,6 +26,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
     
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
@@ -96,6 +99,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/kategori', [\App\Http\Controllers\MasterDataController::class, 'store'])->name('store');
         Route::put('/kategori/{kategori}', [\App\Http\Controllers\MasterDataController::class, 'update'])->name('update');
         Route::delete('/kategori/{kategori}', [\App\Http\Controllers\MasterDataController::class, 'destroy'])->name('destroy');
+        Route::get('/{type}', [\App\Http\Controllers\MasterDataController::class, 'items'])->name('items.index');
+        Route::post('/{type}', [\App\Http\Controllers\MasterDataController::class, 'storeItem'])->name('items.store');
+        Route::put('/{type}/{item}', [\App\Http\Controllers\MasterDataController::class, 'updateItem'])->name('items.update');
+        Route::delete('/{type}/{item}', [\App\Http\Controllers\MasterDataController::class, 'destroyItem'])->name('items.destroy');
     });
 
     // Audit Log (Super Admin)
@@ -105,4 +112,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
 });
-

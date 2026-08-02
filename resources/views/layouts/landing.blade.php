@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WBS BBSPJIKKP - Speak Up, Protect Integrity</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/Logo Icon Only.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/Logo Icon Only.png') }}">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,10 +26,10 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top" style="z-index: 1040;">
         <div class="container py-2">
-            <a class="navbar-brand p-0 d-flex align-items-center" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 42px; width: auto;" class="img-fluid">
+            <a class="navbar-brand p-0 d-flex align-items-center me-3 position-relative" style="z-index: 1050;" href="{{ route('home') }}">
+                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 48px; width: auto;" class="img-fluid">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -112,85 +114,85 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer pt-5 pb-4 mt-5 text-white" style="background-color: #2b70f0;">
+    <footer class="footer mt-5 text-white">
         <div class="container">
-            <div class="row gy-4 mb-4">
-                <!-- Column 1 -->
-                <div class="col-lg-4 col-md-6 pe-lg-4">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 40px;" class="bg-white p-1 rounded">
-                        <div class="fw-bold lh-sm fs-5">BBSPJIKKP<br><small class="fw-normal" style="font-size: 0.6rem;">Balai Besar Standardisasi dan Pelayanan Jasa<br>Industri Kulit, Karet, dan Plastik</small></div>
-                    </div>
-                    <p class="small mb-4 opacity-75">
-                        Balai Besar Standardisasi dan Pelayanan Jasa Industri Kulit, Karet, dan Plastik
-                    </p>
-                    <div class="small mb-2 d-flex gap-2">
-                        <i class="bi bi-geo-alt-fill mt-1"></i>
-                        <span>Jl. Sokonandi No.9, Yogyakarta<br>Indonesia 55166</span>
-                    </div>
-                    <div class="small mb-2 d-flex gap-2 align-items-center">
-                        <i class="bi bi-telephone-fill"></i>
-                        <span>+62 274 512 929</span>
-                    </div>
-                    <div class="small mb-4 d-flex gap-2 align-items-center">
-                        <i class="bi bi-envelope-fill"></i>
-                        <span>bbkkp_jogja@kemenperin.go.id</span>
-                    </div>
-                    
-                    <div class="card bg-white bg-opacity-10 border-0 rounded-3 text-white p-3">
-                        <div class="d-flex align-items-center gap-2 mb-3 fw-bold small">
-                            <i class="bi bi-clock"></i> JAM PELAYANAN
+            <div class="footer-main">
+                <div class="row gy-4 align-items-start">
+                    <div class="col-lg-5 col-md-7">
+                        <div class="footer-brand d-flex align-items-center gap-3 mb-3">
+                            <div class="footer-logo">
+                                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP">
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-5 lh-sm">BBSPJIKKP Bersih</div>
+                                <div class="footer-brand-subtitle">Whistleblowing System Resmi</div>
+                            </div>
                         </div>
-                        <ul class="list-unstyled small mb-0 opacity-75" style="font-size: 0.8rem;">
-                            <li class="d-flex justify-content-between mb-2">
-                                <span><span class="text-success fw-bold me-1">&bull;</span>Senin - Kamis</span> <span>08:00 - 15:30</span>
-                            </li>
-                            <li class="d-flex justify-content-between mb-2">
-                                <span><span class="text-success fw-bold me-1">&bull;</span>Jumat</span> <span>08:00 - 16:00</span>
-                            </li>
-                            <li class="d-flex justify-content-between">
-                                <span><span class="text-danger fw-bold me-1">&bull;</span>Sabtu, Ahad</span> <span>Tutup</span>
-                            </li>
+                        <p class="footer-description mb-4">
+                            Balai Besar Standardisasi dan Pelayanan Jasa Industri Kulit, Karet, dan Plastik.
+                        </p>
+
+                        <div class="footer-contact-list">
+                            <div class="footer-contact-item">
+                                <span class="footer-contact-icon"><i class="bi bi-geo-alt-fill"></i></span>
+                                <span>Jl. Sokonandi No.9, Yogyakarta, Indonesia 55166</span>
+                            </div>
+                            <div class="footer-contact-item">
+                                <span class="footer-contact-icon"><i class="bi bi-telephone-fill"></i></span>
+                                <span>+62 274 512 929</span>
+                            </div>
+                            <div class="footer-contact-item">
+                                <span class="footer-contact-icon"><i class="bi bi-envelope-fill"></i></span>
+                                <span>bbkkp_jogja@kemenperin.go.id</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-5">
+                        <h6 class="footer-title">Navigasi</h6>
+                        <ul class="list-unstyled footer-links mb-0">
+                            <li><a href="{{ route('home') }}" class="footer-link">Beranda</a></li>
+                            <li><a href="{{ route('laporan.create') }}" class="footer-link">Buat Laporan</a></li>
+                            <li><a href="{{ route('track.index') }}" class="footer-link">Lacak Laporan</a></li>
+                            <li><a href="{{ route('home') }}#kontak" class="footer-link">Kontak</a></li>
                         </ul>
                     </div>
-                </div>
-                
-                <!-- Column 2 - Navigasi -->
-                <div class="col-lg-3 col-md-6">
-                    <h6 class="fw-bold mb-3 mt-2">NAVIGASI</h6>
-                    <ul class="list-unstyled small footer-links lh-lg">
-                        <li><a href="{{ route('home') }}" class="text-white text-decoration-none opacity-75 footer-link">Beranda</a></li>
-                        <li><a href="{{ route('laporan.create') }}" class="text-white text-decoration-none opacity-75 footer-link">Lapor</a></li>
-                        <li><a href="{{ route('track.index') }}" class="text-white text-decoration-none opacity-75 footer-link">Lacak</a></li>
-                        <li><a href="{{ route('home') }}#kontak" class="text-white text-decoration-none opacity-75 footer-link">Kontak</a></li>
-                    </ul>
-                </div>
 
-                <!-- Column 3 - Layanan Terhubung / Partner Logos -->
-                <div class="col-lg-5 col-md-12 mt-3 mt-lg-0">
-                    <h6 class="fw-bold mb-3 mt-2">LAYANAN TERHUBUNG</h6>
-                    <div class="d-flex flex-wrap align-items-center gap-3">
-                        <img src="{{ asset('images/logo-kemenperin-putih.png') }}" alt="Kementerian Perindustrian" style="max-height: 42px; width: auto;" class="img-fluid me-2 mb-2" onerror="this.onerror=null; this.outerHTML='<span class=\'fw-bold small me-2 mb-2\'>Kemenperin</span>';">
-                        <img src="{{ asset('images/logo-lapor-putih.png') }}" alt="LAPOR!" style="max-height: 34px; width: auto;" class="img-fluid me-2 mb-2" onerror="this.onerror=null; this.outerHTML='<span class=\'fw-bold small me-2 mb-2\'>LAPOR!</span>';">
-                        <img src="{{ asset('images/logo-sippn-putih.png') }}" alt="SIPPN" style="max-height: 34px; width: auto;" class="img-fluid me-2 mb-2" onerror="this.onerror=null; this.outerHTML='<span class=\'fw-bold small me-2 mb-2\'>SIPPN</span>';">
-                        <img src="{{ asset('images/logo-berakhlak-putih.png') }}" alt="BerAKHLAK" style="max-height: 38px; width: auto;" class="img-fluid me-2 mb-2" onerror="this.onerror=null; this.outerHTML='<span class=\'fw-bold small me-2 mb-2\'>BerAKHLAK</span>';">
-                        <img src="{{ asset('images/logo-bmb-putih.png') }}" alt="Bangga Melayani Bangsa" style="max-height: 38px; width: auto;" class="img-fluid mb-2" onerror="this.onerror=null; this.outerHTML='<span class=\'fw-bold small mb-2\'>Bangga Melayani Bangsa</span>';">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="footer-service-box">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="footer-service-icon"><i class="bi bi-clock"></i></span>
+                                <h6 class="footer-title mb-0">Jam Pelayanan</h6>
+                            </div>
+                            <ul class="list-unstyled footer-hours mb-4">
+                                <li><span>Senin - Kamis</span><strong>08:00 - 15:30</strong></li>
+                                <li><span>Jumat</span><strong>08:00 - 16:00</strong></li>
+                                <li><span>Sabtu, Ahad</span><strong>Tutup</strong></li>
+                            </ul>
+
+                            <h6 class="footer-title mb-3">Layanan Terhubung</h6>
+                            <div class="footer-partners">
+                                <img src="{{ url('/images/logo-kemenperin-putih.png') }}" alt="Kementerian Perindustrian">
+                                <img src="{{ url('/images/logo-lapor-putih.png') }}" alt="LAPOR!">
+                                <img src="{{ url('/images/logo-sippn-putih.png') }}" alt="SIPPN">
+                                <img src="{{ url('/images/logo-berakhlak-putih.png') }}" alt="BerAKHLAK">
+                                <img src="{{ url('/images/logo-bmb-putih.png') }}" alt="Bangga Melayani Bangsa">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <hr class="border-white opacity-25">
-            
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-2 small me-md-5 pe-md-4">
-                <div class="opacity-75 mb-3 mb-md-0">
+
+            <div class="footer-bottom d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3">
+                <div class="footer-copyright">
                     &copy; 2025 - Balai Besar Standardisasi dan Pelayanan Jasa Industri Kulit, Karet, dan Plastik. Hak cipta dilindungi.
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="fw-medium">Media Sosial</span>
-                    <a href="#" class="btn btn-sm btn-light p-0 text-primary d-inline-flex align-items-center justify-content-center bg-white" style="width:28px;height:28px;"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="btn btn-sm btn-light p-0 text-dark d-inline-flex align-items-center justify-content-center bg-white" style="width:28px;height:28px;"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="btn btn-sm btn-light p-0 text-primary d-inline-flex align-items-center justify-content-center bg-white" style="width:28px;height:28px;"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="btn btn-sm btn-light p-0 text-danger d-inline-flex align-items-center justify-content-center bg-white" style="width:28px;height:28px;"><i class="bi bi-youtube"></i></a>
+                <div class="footer-social d-flex align-items-center gap-2">
+                    <span>Media Sosial</span>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
                 </div>
             </div>
         </div>
@@ -251,6 +253,47 @@
             setTimeout(updateActiveState, 100);
         }
     });
+
+    // Client-side DOM Injection for Header Logo & Hero Gedung Image
+    (function() {
+        function applyImageDOM() {
+            // 1. DOM manipulation for Navbar Brand Header Logo
+            const navbarBrand = document.querySelector('.navbar-brand');
+            if (navbarBrand) {
+                let logoImg = navbarBrand.querySelector('img');
+                if (!logoImg) {
+                    logoImg = document.createElement('img');
+                    logoImg.className = 'img-fluid';
+                    logoImg.alt = 'Logo BBSPJIKKP';
+                    navbarBrand.prepend(logoImg);
+                }
+                logoImg.setAttribute('src', '/images/logo-bbspjikkp.png');
+                logoImg.style.height = '48px';
+                logoImg.style.width = 'auto';
+                logoImg.style.display = 'block';
+                logoImg.style.visibility = 'visible';
+                logoImg.style.opacity = '1';
+            }
+
+            // 2. DOM manipulation for Hero Section Gedung Image
+            const heroImg = document.querySelector('.hero-image-wrapper img');
+            if (heroImg) {
+                heroImg.setAttribute('src', '/images/gedung-bbspjikkp.jpg');
+                heroImg.style.height = '420px';
+                heroImg.style.width = '100%';
+                heroImg.style.objectFit = 'cover';
+                heroImg.style.display = 'block';
+                heroImg.style.visibility = 'visible';
+                heroImg.style.opacity = '1';
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyImageDOM);
+        } else {
+            applyImageDOM();
+        }
+    })();
     </script>
 
     @stack('scripts')

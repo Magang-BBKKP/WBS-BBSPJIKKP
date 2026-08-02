@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} - WBS BBSPJIKKP</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/Logo Icon Only.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/Logo Icon Only.png') }}">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,10 +126,10 @@
 <body>
 
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top" style="z-index: 1040;">
         <div class="container py-2">
-            <a class="navbar-brand p-0 d-flex align-items-center" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 40px; width: auto;" class="img-fluid">
+            <a class="navbar-brand p-0 d-flex align-items-center me-3 position-relative" style="z-index: 1050;" href="{{ route('home') }}">
+                <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 42px; width: auto;" class="img-fluid">
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -291,5 +293,33 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+
+    <script>
+    (function() {
+        function applyLogoDOM() {
+            const navbarBrand = document.querySelector('.navbar-brand');
+            if (navbarBrand) {
+                let logoImg = navbarBrand.querySelector('img');
+                if (!logoImg) {
+                    logoImg = document.createElement('img');
+                    logoImg.className = 'img-fluid';
+                    logoImg.alt = 'Logo BBSPJIKKP';
+                    navbarBrand.prepend(logoImg);
+                }
+                logoImg.setAttribute('src', '/images/logo-bbspjikkp.png');
+                logoImg.style.height = '42px';
+                logoImg.style.width = 'auto';
+                logoImg.style.display = 'block';
+                logoImg.style.visibility = 'visible';
+                logoImg.style.opacity = '1';
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyLogoDOM);
+        } else {
+            applyLogoDOM();
+        }
+    })();
+    </script>
 </body>
 </html>

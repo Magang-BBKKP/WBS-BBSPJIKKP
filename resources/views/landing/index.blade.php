@@ -3,49 +3,36 @@
 @section('content')
 
 <!-- Hero Section -->
-<section class="hero-section py-5 position-relative">
-    <div class="container py-5">
-        <div class="row align-items-center min-vh-75">
-            <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
-                <span class="badge bg-primary-soft text-primary rounded-pill px-3 py-2 mb-4 d-inline-flex align-items-center gap-2 fw-medium">
-                    <i class="bi bi-shield-check"></i> 100% Rahasia & Aman
-                </span>
-                <h1 class="display-4 fw-bold mb-3 text-dark">
+<section class="hero-section hero-background position-relative">
+    <div class="container position-relative z-index-2">
+        <div class="row align-items-center hero-content">
+            <div class="col-lg-8 col-xl-7">
+                <h1 class="hero-title mb-3">
                     BBSPJIKKP Bersih<br>
-                    <span class="text-primary fs-2">Hebat Tanpa Korupsi.</span>
+                    <span>Hebat Tanpa Korupsi.</span>
                 </h1>
-                <p class="lead text-muted mb-4 pe-lg-4 fs-6 lh-lg">
+                <p class="hero-copy mb-4">
                     Berintegritas • Siap Melayani. Media pelaporan resmi untuk dugaan pelanggaran dengan jaminan perlindungan dan kerahasiaan identitas pelapor.
                 </p>
                 <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="{{ route('laporan.create') }}" class="btn btn-primary btn-lg rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 fw-medium">
+                    <a href="{{ route('laporan.create') }}" class="btn btn-light btn-lg rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 fw-medium shadow-sm">
                         Buat Laporan <i class="bi bi-arrow-right"></i>
                     </a>
-                    <a href="#track" class="btn btn-outline-primary btn-lg rounded-pill px-4 py-2 fw-medium btn-track">
-                        Lacak Laporan
+                    <a href="{{ route('track.index') }}" class="btn btn-hero-outline btn-lg rounded-pill px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-search"></i> Lacak Laporan
                     </a>
                 </div>
-                <div class="d-flex flex-wrap gap-4 small text-muted">
-                    <span class="d-inline-flex align-items-center gap-2">
+                <div class="hero-trust-list">
+                    <span>
                         <i class="bi bi-lock"></i> Enkripsi Data
                     </span>
-                    <span class="d-inline-flex align-items-center gap-2">
+                    <span>
                         <i class="bi bi-person-slash"></i> Identitas Terlindungi
                     </span>
+                    <span>
+                        <i class="bi bi-geo-alt-fill"></i> Yogyakarta
+                    </span>
                 </div>
-            </div>
-            
-            <div class="col-lg-6 position-relative">
-                <div class="hero-card bg-white p-5 rounded-4 shadow-lg text-center mx-auto">
-                    <div class="icon-circle bg-primary-soft text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-4">
-                        <i class="bi bi-shield-shaded fs-1"></i>
-                    </div>
-                    <h3 class="h4 fw-bold mb-2">Integritas Terjaga</h3>
-                    <p class="text-muted small mb-0">Dipantau langsung oleh Tim WBS BBSPJIKKP</p>
-                </div>
-                <!-- Decorative blurred shapes -->
-                <div class="blob-1 position-absolute rounded-circle bg-primary opacity-10"></div>
-                <div class="blob-2 position-absolute rounded-circle bg-info opacity-10"></div>
             </div>
         </div>
     </div>
@@ -61,67 +48,59 @@
     </div>
 </section>
 
-<!-- Komitmen Integritas (Bento Grid) -->
-<section class="py-5 my-5">
-    <div class="container text-center mb-5">
-        <h2 class="fw-bold mb-3">Komitmen Integritas</h2>
-        <p class="text-muted">Prinsip utama kami dalam menangani setiap laporan yang masuk.</p>
-    </div>
-    
+<!-- Statistik Laporan -->
+<section class="report-stats-section py-5 my-5">
     <div class="container">
+        @php
+            $reportStats = $reportStats ?? [
+                ['label' => 'Total Pelapor', 'value' => 0, 'percent' => 0, 'icon' => 'bi-people-fill', 'tone' => 'primary'],
+                ['label' => 'Disetujui', 'value' => 0, 'percent' => 0, 'icon' => 'bi-check2-circle', 'tone' => 'success'],
+                ['label' => 'Sedang Proses', 'value' => 0, 'percent' => 0, 'icon' => 'bi-hourglass-split', 'tone' => 'warning'],
+                ['label' => 'Ditolak', 'value' => 0, 'percent' => 0, 'icon' => 'bi-x-circle', 'tone' => 'danger'],
+            ];
+        @endphp
+
+        <div class="row align-items-end mb-4 g-3">
+            <div class="col-lg-7">
+                <h2 class="fw-bold mb-3">Grafik Pelaporan</h2>
+                <p class="text-muted mb-0">Ringkasan jumlah pelapor berdasarkan status penanganan laporan yang masuk.</p>
+            </div>
+            <div class="col-lg-5 text-lg-end">
+                <span class="report-stats-badge">
+                    <i class="bi bi-bar-chart-fill"></i>
+                    Data laporan terkini
+                </span>
+            </div>
+        </div>
+
         <div class="row g-4">
-            <!-- Kerahasiaan Identitas -->
-            <div class="col-lg-8">
-                <div class="bento-card bg-white rounded-4 p-4 p-lg-5 h-100 shadow-sm border position-relative overflow-hidden">
-                    <div class="row h-100">
-                        <div class="col-md-7 d-flex flex-column justify-content-center">
-                            <h3 class="fw-bold mb-3 text-primary letter-spacing-wide">
-                                <span class="badge bg-primary-soft text-primary px-3 py-2 rounded-pill fs-6 fw-bold">R A H A S I A</span>
-                            </h3>
-                            <h4 class="fw-bold mb-3">Kerahasiaan Identitas</h4>
-                            <p class="text-muted small lh-lg mb-0">Anda dapat melapor secara anonim. Sistem kami secara otomatis mengamankan data dan tidak akan mempublikasikan informasi identitas Anda kepada pihak yang dilaporkan.</p>
+            <div class="col-lg-5">
+                <div class="report-summary-card h-100">
+                    <div class="report-summary-icon mb-4">
+                        <i class="bi bi-clipboard2-data"></i>
+                    </div>
+                    <div class="report-summary-label">Total Pelapor</div>
+                    <div class="report-summary-value">{{ number_format($reportStats[0]['value']) }}</div>
+                    <p class="report-summary-copy mb-0">
+                        Laporan yang masuk melalui kanal WBS dan tercatat di sistem.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="report-chart-card">
+                    @foreach($reportStats as $item)
+                        <div class="report-chart-row report-chart-{{ $item['tone'] }}">
+                            <div class="report-chart-meta">
+                                <span class="report-chart-icon"><i class="bi {{ $item['icon'] }}"></i></span>
+                                <span class="report-chart-label">{{ $item['label'] }}</span>
+                                <strong>{{ number_format($item['value']) }}</strong>
+                            </div>
+                            <div class="report-chart-track">
+                                <span class="report-chart-fill" style="width: {{ max($item['percent'], $item['value'] > 0 ? 8 : 0) }}%;"></span>
+                            </div>
                         </div>
-                        <div class="col-md-5 d-none d-md-block position-relative">
-                            <div class="bento-image-placeholder rounded shadow-sm w-100 h-100" style="background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=500&q=80') center/cover; min-height:180px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Independen -->
-            <div class="col-lg-4">
-                <div class="bento-card bg-dark-blue text-white rounded-4 p-4 p-lg-5 h-100 shadow-sm position-relative">
-                    <div class="icon-sm bg-white-10 rounded d-inline-flex align-items-center justify-content-center mb-4 p-2">
-                        <i class="bi bi-person-check text-info"></i>
-                    </div>
-                    <h4 class="fw-bold mb-3">Investigasi Independen</h4>
-                    <p class="text-white-50 small lh-lg mb-5">Laporan ditangani oleh Tim Investigator yang independen dan profesional berdasarkan SOP resmi BBSPJIKKP.</p>
-                    <div class="position-absolute bottom-0 start-0 w-100 p-4 p-lg-5 d-flex justify-content-between align-items-center border-top border-secondary border-opacity-25 mt-auto">
-                        <span class="small text-white-50">Transparan & Obyektif</span>
-                        <span class="status-dot bg-success rounded-circle" style="width:8px;height:8px;"></span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Transparansi -->
-            <div class="col-lg-6">
-                <div class="bento-card bg-white rounded-4 p-4 shadow-sm border h-100">
-                    <div class="icon-sm bg-primary-soft text-primary rounded d-inline-flex align-items-center justify-content-center mb-4 p-2">
-                        <i class="bi bi-eye"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Transparansi Proses</h5>
-                    <p class="text-muted small lh-lg mb-0">Setiap pelapor dapat memantau status laporannya secara real-time menggunakan Nomor Registrasi yang diberikan, hingga laporan ditindaklanjuti.</p>
-                </div>
-            </div>
-            
-            <!-- Perlindungan -->
-            <div class="col-lg-6">
-                <div class="bento-card bg-white rounded-4 p-4 shadow-sm border h-100">
-                    <div class="icon-sm bg-primary-soft text-primary rounded d-inline-flex align-items-center justify-content-center mb-4 p-2">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Perlindungan Pelapor</h5>
-                    <p class="text-muted small lh-lg mb-0">BBSPJIKKP memberikan komitmen penuh terhadap perlindungan pelapor dari segala bentuk tindakan balasan atau diskriminasi.</p>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -264,20 +243,48 @@
 <!-- Kontak & CTA Bottom Section -->
 <section id="kontak" class="py-5 mb-5">
     <div class="container">
-        <div class="bg-dark-blue rounded-4 p-5 text-center shadow-lg position-relative overflow-hidden">
-            <!-- Decorative Blobs -->
-            <div class="position-absolute top-0 start-0 w-50 h-100 bg-white opacity-5 rounded-circle" style="transform: translate(-30%, -20%); blur: 40px;"></div>
-            
-            <div class="position-relative z-index-2 py-4">
-                <h2 class="display-5 fw-bold text-white mb-3">Kontak Kami</h2>
-                <p class="text-white-50 mb-4 fs-6 mx-auto" style="max-width: 600px;">
-                    Jalan Sokonandi No. 9, Semaki, Umbulharjo, Yogyakarta 55166<br>
-                    Email: wbssupport@bbspjekkp.go.id | Telp: (0274) 512929
-                </p>
-                <div class="d-flex justify-content-center flex-wrap gap-3 mt-5">
-                    <a href="{{ route('laporan.create') }}" class="btn btn-light btn-lg rounded-pill px-4 py-2 fw-medium">
-                        Buat Laporan Sekarang
-                    </a>
+        <div class="contact-card">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <div class="contact-eyebrow mb-3">Kontak Resmi</div>
+                    <h2 class="contact-title mb-3">Kontak Kami</h2>
+                    <p class="contact-copy mb-4">
+                        Hubungi BBSPJIKKP untuk informasi layanan atau gunakan kanal pelaporan untuk menyampaikan dugaan pelanggaran secara aman.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{{ route('laporan.create') }}" class="btn btn-light btn-lg rounded-pill px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                            Buat Laporan <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('track.index') }}" class="btn btn-contact-outline btn-lg rounded-pill px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-search"></i> Lacak Laporan
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="contact-info-panel">
+                        <div class="contact-info-item">
+                            <span class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></span>
+                            <div>
+                                <div class="contact-info-label">Alamat</div>
+                                <div class="contact-info-text">Jl. Sokonandi No.9, Yogyakarta, Indonesia 55166</div>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <span class="contact-info-icon"><i class="bi bi-envelope-fill"></i></span>
+                            <div>
+                                <div class="contact-info-label">Email</div>
+                                <div class="contact-info-text">bbkkp_jogja@kemenperin.go.id</div>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <span class="contact-info-icon"><i class="bi bi-telephone-fill"></i></span>
+                            <div>
+                                <div class="contact-info-label">Telepon</div>
+                                <div class="contact-info-text">(0274) 512929</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

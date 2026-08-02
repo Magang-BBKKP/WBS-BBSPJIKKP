@@ -18,6 +18,18 @@
     </div>
 @endif
 
+@isset($tabs)
+<ul class="nav nav-pills gap-2 mb-4">
+    @foreach($tabs as $tab)
+        <li class="nav-item">
+            <a class="nav-link {{ $tab['active'] ? 'active' : '' }}" href="{{ $tab['url'] }}">
+                {{ $tab['title'] }}
+            </a>
+        </li>
+    @endforeach
+</ul>
+@endisset
+
 {{-- Search --}}
 <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-3">
