@@ -34,12 +34,14 @@ class Laporan extends Model
         'verification_note',
         'clarification_message',
         'rejection_reason',
+        'custom_fields',
     ];
 
     protected $casts = [
         'is_anonim'        => 'boolean',
         'tanggal_kejadian' => 'date',
         'verified_at'      => 'datetime',
+        'custom_fields'    => 'array',
     ];
 
     // Status constants

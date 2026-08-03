@@ -7,6 +7,9 @@
 @endpush
 
 @section('content')
+@php
+    $base = fn (string $name) => $baseFields->get($name);
+@endphp
 <div class="laporan-page py-4">
 <div class="container">
 
@@ -56,6 +59,7 @@
                         <h2>Pilih Kategori</h2>
                         <p class="subtitle">Pilih jenis utama pelanggaran yang ingin Anda laporkan.</p>
 
+                        @if($base('kategori_id'))
                         <div class="category-grid mt-3">
                             @foreach($kategoris as $kat)
                             <label class="category-card-label">
@@ -76,6 +80,11 @@
                         @error('kategori_id')
                         <div class="text-danger small mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                         @enderror
+                        @else
+                        <div class="alert alert-light border rounded-3 mt-3 mb-0">
+                            Field kategori laporan sedang tidak aktif.
+                        </div>
+                        @endif
 
                         <div class="d-flex justify-content-end mt-4">
                             <button type="button" class="btn-laporan-primary" onclick="goToStep(2)">
@@ -93,40 +102,116 @@
 
                         <div class="row g-3 mt-1">
                             {{-- Judul --}}
+                            @if($field = $base('judul'))
                             <div class="col-12">
-                                <label class="form-label">Judul Laporan <span class="required-star">*</span></label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror"
-                                    placeholder="Ringkasan singkat pelanggaran yang dilaporkan"
+                                    placeholder="{{ $field->placeholder }}"
                                     value="{{ old('judul') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                 @error('judul')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            @endif
 
                             {{-- Deskripsi --}}
+                            @if($field = $base('deskripsi'))
                             <div class="col-12">
-                                <label class="form-label">Deskripsi Kejadian <span class="required-star">*</span></label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <textarea name="deskripsi" rows="5"
                                     class="form-control @error('deskripsi') is-invalid @enderror"
-                                    placeholder="Ceritakan secara detail: apa yang terjadi, kapan, di mana, siapa yang terlibat, dan bagaimana kejadiannya. (minimal 50 karakter)">{{ old('deskripsi') }}</textarea>
+                                    placeholder="{{ $field->placeholder }}">{{ old('deskripsi') }}</textarea>
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                 @error('deskripsi')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            @endif
 
                             {{-- Tanggal & Lokasi --}}
+                            @if($field = $base('tanggal_kejadian'))
                             <div class="col-md-6">
-                                <label class="form-label">Tanggal Kejadian</label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="date" name="tanggal_kejadian"
                                     class="form-control @error('tanggal_kejadian') is-invalid @enderror"
                                     value="{{ old('tanggal_kejadian') }}"
                                     max="{{ date('Y-m-d') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                 @error('tanggal_kejadian')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                            @endif
+                            @if($field = $base('lokasi'))
                             <div class="col-md-6">
-                                <label class="form-label">Lokasi Kejadian</label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="text" name="lokasi" class="form-control"
-                                    placeholder="Gedung / Unit / Lokasi"
+                                    placeholder="{{ $field->placeholder }}"
                                     value="{{ old('lokasi') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
+                            </div>
+                            @endif
+
+                            @if($customFields->count())
+                            <div class="col-12 mt-2">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="fw-semibold text-dark" style="font-size:.9rem;">Informasi Tambahan</span>
+                                    <small class="text-muted">(sesuai konfigurasi admin)</small>
+                                </div>
+                                <hr class="mt-1 mb-3">
                             </div>
 
+                            @foreach($customFields as $field)
+                                @php
+                                    $fieldName = "custom_fields[{$field->name}]";
+                                    $oldValue = old("custom_fields.{$field->name}");
+                                    $fieldError = $errors->first("custom_fields.{$field->name}");
+                                @endphp
+                                <div class="{{ in_array($field->type, ['textarea', 'checkbox'], true) ? 'col-12' : 'col-md-6' }}">
+                                    <label class="form-label">
+                                        {{ $field->label }}
+                                        @if($field->is_required)<span class="required-star">*</span>@endif
+                                    </label>
+
+                                    @if($field->type === 'textarea')
+                                        <textarea name="{{ $fieldName }}" rows="4" class="form-control @if($fieldError) is-invalid @endif" placeholder="{{ $field->placeholder }}">{{ $oldValue }}</textarea>
+                                    @elseif($field->type === 'select')
+                                        <select name="{{ $fieldName }}" class="form-select @if($fieldError) is-invalid @endif">
+                                            <option value="">Pilih {{ strtolower($field->label) }}</option>
+                                            @foreach($field->options ?? [] as $option)
+                                                <option value="{{ $option }}" {{ $oldValue === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                            @endforeach
+                                        </select>
+                                    @elseif($field->type === 'radio')
+                                        <div class="@if($fieldError) is-invalid @endif">
+                                            @foreach($field->options ?? [] as $option)
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="{{ $fieldName }}" id="{{ $field->name }}_{{ $loop->index }}" value="{{ $option }}" {{ $oldValue === $option ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="{{ $field->name }}_{{ $loop->index }}">{{ $option }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @elseif($field->type === 'checkbox')
+                                        @php $checkedValues = is_array($oldValue) ? $oldValue : []; @endphp
+                                        <div class="@if($fieldError) is-invalid @endif">
+                                            @foreach($field->options ?? [] as $option)
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="{{ $fieldName }}[]" id="{{ $field->name }}_{{ $loop->index }}" value="{{ $option }}" {{ in_array($option, $checkedValues, true) ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="{{ $field->name }}_{{ $loop->index }}">{{ $option }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <input type="{{ $field->type === 'number' ? 'number' : ($field->type === 'date' ? 'date' : 'text') }}" name="{{ $fieldName }}" class="form-control @if($fieldError) is-invalid @endif" placeholder="{{ $field->placeholder }}" value="{{ $oldValue }}">
+                                    @endif
+
+                                    @if($field->help_text)
+                                        <div class="form-text">{{ $field->help_text }}</div>
+                                    @endif
+                                    @if($fieldError)
+                                        <div class="invalid-feedback d-block">{{ $fieldError }}</div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            @endif
+
                             {{-- Divider: Data Terlapor --}}
+                            @if($base('nama_terlapor') || $base('jabatan_terlapor') || $base('unit_terlapor'))
                             <div class="col-12 mt-2">
                                 <div class="d-flex align-items-center gap-2 mb-1">
                                     <span class="fw-semibold text-dark" style="font-size:.9rem;">Data Terlapor</span>
@@ -134,24 +219,35 @@
                                 </div>
                                 <hr class="mt-1 mb-3">
                             </div>
+                            @endif
 
+                            @if($field = $base('nama_terlapor'))
                             <div class="col-md-4">
-                                <label class="form-label">Nama Terlapor</label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="text" name="nama_terlapor" class="form-control"
-                                    placeholder="Nama lengkap" value="{{ old('nama_terlapor') }}">
+                                    placeholder="{{ $field->placeholder }}" value="{{ old('nama_terlapor') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                             </div>
+                            @endif
+                            @if($field = $base('jabatan_terlapor'))
                             <div class="col-md-4">
-                                <label class="form-label">Jabatan</label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="text" name="jabatan_terlapor" class="form-control"
-                                    placeholder="Jabatan" value="{{ old('jabatan_terlapor') }}">
+                                    placeholder="{{ $field->placeholder }}" value="{{ old('jabatan_terlapor') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                             </div>
+                            @endif
+                            @if($field = $base('unit_terlapor'))
                             <div class="col-md-4">
-                                <label class="form-label">Unit / Bagian</label>
+                                <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                 <input type="text" name="unit_terlapor" class="form-control"
-                                    placeholder="Unit kerja" value="{{ old('unit_terlapor') }}">
+                                    placeholder="{{ $field->placeholder }}" value="{{ old('unit_terlapor') }}">
+                                @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                             </div>
+                            @endif
 
                             {{-- Anonim Toggle --}}
+                            @if($field = $base('is_anonim'))
                             <div class="col-12 mt-3">
                                 <div class="anonim-card">
                                     <div class="form-check form-switch mb-0">
@@ -160,16 +256,20 @@
                                             {{ old('is_anonim', false) ? 'checked' : '' }}
                                             onchange="toggleAnonimFields(this)">
                                         <label class="form-check-label ms-2" for="isAnonim">
-                                            <i class="bi bi-incognito me-1"></i> Lapor Secara Anonim
+                                            <i class="bi bi-incognito me-1"></i> {{ $field->label }}
                                         </label>
                                     </div>
+                                    @if($field->help_text)
                                     <small class="text-muted d-block mt-1 ms-4 ps-2">
-                                        Identitas Anda akan disembunyikan dan tidak diketahui siapapun.
+                                        {{ $field->help_text }}
                                     </small>
+                                    @endif
                                 </div>
                             </div>
+                            @endif
 
                             {{-- Identitas Pelapor (muncul jika tidak anonim) --}}
+                            @if($base('nama_pelapor') || $base('email_pelapor') || $base('telepon_pelapor'))
                             <div class="col-12" id="identitasPelapor" style="{{ old('is_anonim', false) ? 'display:none' : '' }}">
                                 <div class="row g-3">
                                     <div class="col-12 mt-1">
@@ -178,25 +278,36 @@
                                         </div>
                                         <hr class="mt-1 mb-3">
                                     </div>
+                                    @if($field = $base('nama_pelapor'))
                                     <div class="col-md-4">
-                                        <label class="form-label">Nama Lengkap <span class="required-star">*</span></label>
+                                        <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                         <input type="text" name="nama_pelapor" class="form-control @error('nama_pelapor') is-invalid @enderror"
-                                            placeholder="Nama lengkap Anda" value="{{ old('nama_pelapor', auth()->user()->name) }}">
+                                            placeholder="{{ $field->placeholder }}" value="{{ old('nama_pelapor', auth()->user()->name) }}">
+                                        @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                         @error('nama_pelapor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
+                                    @endif
+                                    @if($field = $base('email_pelapor'))
                                     <div class="col-md-4">
-                                        <label class="form-label">Email <span class="required-star">*</span></label>
+                                        <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                         <input type="email" name="email_pelapor" class="form-control @error('email_pelapor') is-invalid @enderror"
-                                            placeholder="email@contoh.com" value="{{ old('email_pelapor', auth()->user()->email) }}">
+                                            placeholder="{{ $field->placeholder }}" value="{{ old('email_pelapor', auth()->user()->email) }}">
+                                        @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                         @error('email_pelapor')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
+                                    @endif
+                                    @if($field = $base('telepon_pelapor'))
                                     <div class="col-md-4">
-                                        <label class="form-label">No. Telepon</label>
+                                        <label class="form-label">{{ $field->label }} @if($field->is_required)<span class="required-star">*</span>@endif</label>
                                         <input type="text" name="telepon_pelapor" class="form-control"
-                                            placeholder="08xx-xxxx-xxxx" value="{{ old('telepon_pelapor', auth()->user()->phone_number) }}">
+                                            placeholder="{{ $field->placeholder }}" value="{{ old('telepon_pelapor', auth()->user()->phone_number) }}">
+                                        @if($field->help_text)<div class="form-text">{{ $field->help_text }}</div>@endif
                                     </div>
+                                    @endif
                                 </div>
                             </div>
+                            @endif
+
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
@@ -213,8 +324,9 @@
                 {{-- ════ STEP 3: BUKTI ════ --}}
                 <div class="laporan-panel step-panel" id="step-3">
                     <div class="laporan-panel-body">
-                        <h2>Upload Bukti</h2>
-                        <p class="subtitle">Lampirkan dokumen, foto, atau file pendukung laporan Anda. (Opsional, maks. 10 file @ 10 MB)</p>
+                        @if($field = $base('bukti'))
+                        <h2>{{ $field->label }}</h2>
+                        <p class="subtitle">{{ $field->help_text ?: 'Lampirkan dokumen, foto, atau file pendukung laporan Anda.' }}</p>
 
                         <div class="dropzone-area mt-3" id="dropzone">
                             <input type="file" name="bukti[]" id="buktiInput" multiple
@@ -229,6 +341,10 @@
                         @error('bukti.*')
                         <div class="text-danger small mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
                         @enderror
+                        @else
+                        <h2>Ringkasan</h2>
+                        <p class="subtitle">Periksa kembali laporan Anda sebelum dikirim.</p>
+                        @endif
 
                         {{-- Review Summary --}}
                         <div class="mt-4 p-3 rounded-3" style="background:#f8fafc; border:1.5px solid #e2e8f0;">
@@ -319,7 +435,11 @@ let uploadedFiles = [];
 
 // ── Step Navigation ────────────────────────────────────────
 function goToStep(step) {
-    if (step === 2 && currentStep === 1) {
+    const categoryRequired = @json((bool) optional($base('kategori_id'))->is_required);
+    const titleRequired = @json((bool) optional($base('judul'))->is_required);
+    const descriptionRequired = @json((bool) optional($base('deskripsi'))->is_required);
+
+    if (categoryRequired && step === 2 && currentStep === 1) {
         const selected = document.querySelector('input[name="kategori_id"]:checked');
         if (!selected) {
             showStepError('Silakan pilih kategori pelanggaran terlebih dahulu.');
@@ -327,10 +447,12 @@ function goToStep(step) {
         }
     }
     if (step === 3 && currentStep === 2) {
-        const judul = document.querySelector('[name="judul"]').value.trim();
-        const desk  = document.querySelector('[name="deskripsi"]').value.trim();
-        if (!judul) { showStepError('Judul laporan wajib diisi.'); return; }
-        if (desk.length < 50) { showStepError('Deskripsi minimal 50 karakter.'); return; }
+        const judulEl = document.querySelector('[name="judul"]');
+        const deskEl  = document.querySelector('[name="deskripsi"]');
+        const judul = judulEl ? judulEl.value.trim() : '';
+        const desk  = deskEl ? deskEl.value.trim() : '';
+        if (titleRequired && !judul) { showStepError('Judul laporan wajib diisi.'); return; }
+        if (descriptionRequired && desk.length < 50) { showStepError('Deskripsi minimal 50 karakter.'); return; }
         updateSummary();
     }
 
@@ -370,6 +492,7 @@ function showStepError(msg) {
 // ── Anonim Toggle ──────────────────────────────────────────
 function toggleAnonimFields(checkbox) {
     const identitas = document.getElementById('identitasPelapor');
+    if (!identitas) return;
     identitas.style.display = checkbox.checked ? 'none' : 'block';
 }
 
@@ -379,6 +502,13 @@ function updateSummary() {
     if (katEl) {
         const label = katEl.closest('.category-card-label').querySelector('h5').textContent;
         document.getElementById('summaryKategori').textContent = label;
+    }
+    if (!document.querySelector('[name="judul"]') || !document.getElementById('isAnonim')) {
+        const judulEl = document.querySelector('[name="judul"]');
+        const anonimEl = document.getElementById('isAnonim');
+        document.getElementById('summaryJudul').textContent = judulEl ? (judulEl.value || '---') : '---';
+        document.getElementById('summaryAnonim').textContent = anonimEl && !anonimEl.checked ? 'Tidak Anonim' : 'Anonim';
+        return;
     }
     document.getElementById('summaryJudul').textContent =
         document.querySelector('[name="judul"]').value || '—';
@@ -390,6 +520,7 @@ function updateSummary() {
 const fileInput = document.getElementById('buktiInput');
 const dropzone  = document.getElementById('dropzone');
 
+if (fileInput && dropzone) {
 fileInput.addEventListener('change', handleFiles);
 
 dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -399,6 +530,7 @@ dropzone.addEventListener('drop', e => {
     dropzone.classList.remove('dragover');
     addFiles(Array.from(e.dataTransfer.files));
 });
+}
 
 function handleFiles(e) { addFiles(Array.from(e.target.files)); }
 
@@ -422,11 +554,12 @@ function removeFile(idx) {
 function rebuildFileInput() {
     const dt = new DataTransfer();
     uploadedFiles.forEach(f => dt.items.add(f));
-    fileInput.files = dt.files;
+    if (fileInput) fileInput.files = dt.files;
 }
 
 function renderFilePreview() {
     const list = document.getElementById('filePreviewList');
+    if (!list) return;
     list.innerHTML = '';
     uploadedFiles.forEach((f, i) => {
         const icon = getFileIcon(f.name);
@@ -471,6 +604,8 @@ document.getElementById('laporanForm').addEventListener('submit', function () {
 @if($errors->has('kategori_id'))
     goToStep(1);
 @elseif($errors->hasAny(['judul','deskripsi','tanggal_kejadian','nama_pelapor','email_pelapor']))
+    goToStep(2);
+@elseif($errors->has('custom_fields') || collect($errors->getMessages())->keys()->contains(fn ($key) => str_starts_with($key, 'custom_fields.')))
     goToStep(2);
 @elseif($errors->has('bukti') || $errors->has('bukti.*'))
     goToStep(3);

@@ -9,8 +9,6 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
-    depends_on:
-      - db
     networks:
       - wbs-network
 
@@ -28,42 +26,6 @@ services:
     networks:
       - wbs-network
 
-  db:
-    image: mysql:8.0
-    container_name: wbs-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-wbs_bbkkp}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_USER: ${DB_USERNAME:-wbs_user}
-    volumes:
-      - wbs-db-data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - wbs-network
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: wbs-phpmyadmin
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: ${DB_PASSWORD:-secret}
-      UPLOAD_LIMIT: 100M
-    depends_on:
-      - db
-    networks:
-      - wbs-network
-
 networks:
   wbs-network:
     driver: bridge
-
-volumes:
-  wbs-db-data:

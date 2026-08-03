@@ -1,10 +1,19 @@
 <!-- UserWay Third-Party Web Accessibility Widget API -->
+<style>
+    body #userwayAccessibilityIcon,
+    body .uai {
+        top: auto !important;
+        right: auto !important;
+        bottom: 24px !important;
+        left: 24px !important;
+    }
+</style>
 <script>
     (function(d){
         var s = d.createElement("script");
         /* Load UserWay official CDN Widget Script API */
         s.setAttribute("data-account", "0m4b35W8A1");
-        s.setAttribute("data-position", "3");
+        s.setAttribute("data-position", "5");
         s.setAttribute("src", "https://cdn.userway.org/widget.js");
         (d.body || d.head).appendChild(s);
     })(document);

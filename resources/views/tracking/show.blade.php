@@ -248,6 +248,28 @@
     <div class="row g-4">
         <!-- Left Column -->
         <div class="col-lg-7">
+
+            @if(!empty($laporan->custom_fields))
+            <div class="tracking-card p-4">
+                <h5 class="fw-bold mb-3">Informasi Tambahan</h5>
+                <div class="row g-3">
+                    @foreach($laporan->custom_fields as $answer)
+                        <div class="col-md-6">
+                            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                                <div class="text-muted small fw-semibold mb-1">{{ $answer['label'] ?? '-' }}</div>
+                                <div class="fw-medium text-break">
+                                    @if(is_array($answer['value'] ?? null))
+                                        {{ implode(', ', $answer['value']) }}
+                                    @else
+                                        {{ $answer['value'] ?? '-' }}
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
             
             <!-- Process Status -->
             <div class="tracking-card p-4">

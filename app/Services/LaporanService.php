@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Bukti;
+use App\Models\Kategori;
 use App\Models\Laporan;
+use App\Models\ReportFormField;
 use App\Repositories\Contracts\LaporanRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -43,10 +45,18 @@ class LaporanService extends BaseService
                 }
             }
 
-            // 3. Simpan laporan
+            // 3. Lengkapi nilai internal jika field bawaan disembunyikan dari form.
+            $data['kategori_id'] = $data['kategori_id'] ?? Kategori::aktif()->value('id') ?? Kategori::query()->value('id');
+            $data['judul'] = trim((string) ($data['judul'] ?? '')) ?: 'Laporan tanpa judul';
+            $data['deskripsi'] = trim((string) ($data['deskripsi'] ?? '')) ?: 'Deskripsi tidak diisi melalui formulir.';
+            $data['is_anonim'] = (bool) ($data['is_anonim'] ?? true);
+
+            // 4. Simpan laporan
+            $data['custom_fields'] = $this->formatCustomFields((array) ($data['custom_fields'] ?? []));
+
             $laporan = $this->laporanRepository->create($data);
 
-            // 4. Upload & simpan bukti
+            // 5. Upload & simpan bukti
             if (!empty($files)) {
                 foreach ($files as $file) {
                     if ($file instanceof UploadedFile && $file->isValid()) {
@@ -76,5 +86,31 @@ class LaporanService extends BaseService
             'mime_type'  => $file->getMimeType(),
             'ukuran'     => $file->getSize(),
         ]);
+    }
+
+    private function formatCustomFields(array $values): array
+    {
+        return ReportFormField::forLaporanForm()
+            ->mapWithKeys(function (ReportFormField $field) use ($values) {
+                $value = $values[$field->name] ?? null;
+
+                if (is_array($value)) {
+                    $value = collect($value)
+                        ->map(fn ($item) => trim((string) $item))
+                        ->filter()
+                        ->values()
+                        ->all();
+                } elseif ($value !== null) {
+                    $value = trim((string) $value);
+                }
+
+                return [$field->name => [
+                    'label' => $field->label,
+                    'type' => $field->type,
+                    'value' => $value,
+                ]];
+            })
+            ->filter(fn ($item) => $item['value'] !== null && $item['value'] !== '' && $item['value'] !== [])
+            ->all();
     }
 }

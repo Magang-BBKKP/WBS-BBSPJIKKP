@@ -105,6 +105,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{type}/{item}', [\App\Http\Controllers\MasterDataController::class, 'destroyItem'])->name('items.destroy');
     });
 
+    // Form Builder Pelaporan (Super Admin)
+    Route::resource('form-fields', \App\Http\Controllers\ReportFormFieldController::class)
+        ->only(['index', 'store', 'update', 'destroy'])
+        ->parameters(['form-fields' => 'formField']);
+
     // Audit Log (Super Admin)
     Route::get('/audit-log', [\App\Http\Controllers\AuditLogController::class, 'index'])->name('audit-log.index');
 
