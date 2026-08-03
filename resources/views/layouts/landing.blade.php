@@ -51,10 +51,6 @@
                 </ul>
             </div>
             <div class="d-flex align-items-center gap-2 ms-auto">
-                <button type="button" class="btn btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center p-2 text-primary border" data-bs-toggle="offcanvas" data-bs-target="#accessibilityOffcanvas" title="Fitur Aksesibilitas" style="width: 36px; height: 36px;">
-                    <i class="bi bi-universal-access fs-5"></i>
-                </button>
-                
                 <div class="d-none d-lg-flex align-items-center ms-1">
                     <span class="text-muted small me-1">ID</span>
                     <i class="bi bi-globe text-muted"></i>

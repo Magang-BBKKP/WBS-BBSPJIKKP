@@ -68,6 +68,28 @@
                         {{ $laporan->deskripsi }}
                     </div>
                 </div>
+
+                @if(!empty($laporan->custom_fields))
+                    <div class="mb-2">
+                        <label class="text-muted small fw-semibold d-block mb-2">Informasi Tambahan</label>
+                        <div class="row g-3">
+                            @foreach($laporan->custom_fields as $answer)
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <div class="text-muted small fw-semibold mb-1">{{ $answer['label'] ?? '-' }}</div>
+                                        <div class="text-dark fw-medium text-break">
+                                            @if(is_array($answer['value'] ?? null))
+                                                {{ implode(', ', $answer['value']) }}
+                                            @else
+                                                {{ $answer['value'] ?? '-' }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Terlapor Card -->

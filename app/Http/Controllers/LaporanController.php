@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLaporanRequest;
 use App\Models\Kategori;
 use App\Models\Laporan;
+use App\Models\ReportFormField;
 use App\Services\LaporanService;
 use Illuminate\Http\Request;
 
@@ -21,8 +22,10 @@ class LaporanController extends Controller
     public function create()
     {
         $kategoris = Kategori::aktif()->get();
+        $baseFields = ReportFormField::baseForLaporanForm()->keyBy('name');
+        $customFields = ReportFormField::forLaporanForm();
 
-        return view('laporan.create', compact('kategoris'));
+        return view('laporan.create', compact('kategoris', 'baseFields', 'customFields'));
     }
 
     /**

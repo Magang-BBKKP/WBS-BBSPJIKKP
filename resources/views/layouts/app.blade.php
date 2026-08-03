@@ -137,10 +137,6 @@
             </button>
             
             <div class="d-flex align-items-center gap-3 ms-auto ms-lg-0 order-lg-last">
-                <button type="button" class="btn btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center p-2 text-primary border" data-bs-toggle="offcanvas" data-bs-target="#accessibilityOffcanvas" title="Fitur Aksesibilitas" style="width: 36px; height: 36px;">
-                    <i class="bi bi-universal-access fs-5"></i>
-                </button>
-
                 @auth
                     <div class="dropdown">
                         <button class="btn btn-link text-decoration-none dropdown-toggle text-dark d-flex align-items-center gap-2 p-0" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -258,6 +254,12 @@
                             @can('view-master-data')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('master-data.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('master-data.index') }}">
                                 <i class="bi bi-database"></i> Master Data
+                            </a>
+                            @endcan
+
+                            @can('view-master-data')
+                            <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('form-fields.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('form-fields.index') }}">
+                                <i class="bi bi-ui-checks-grid"></i> Form Pelaporan
                             </a>
                             @endcan
 
