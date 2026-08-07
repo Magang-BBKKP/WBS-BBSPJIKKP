@@ -9,6 +9,7 @@ use App\Models\LaporanMessage;
 use App\Models\Kategori;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -126,6 +127,51 @@ class VerificationTest extends TestCase
             'status' => 'valid',
             'title' => 'Laporan Terverifikasi',
         ]);
+    }
+
+    public function test_validate_report_sends_whatsapp_notification_for_non_anonymous_report(): void
+    {
+        $whatsappBaseUrl = rtrim((string) config('services.whatsapp.base_url', 'http://localhost:3000'), '/');
+
+        Http::fake([
+            $whatsappBaseUrl . '/send/message' => Http::response([
+                'code' => 'SUCCESS',
+                'message' => 'Success',
+            ], 200),
+        ]);
+
+        $kategori = Kategori::first();
+
+        $laporan = Laporan::create([
+            'nomor_registrasi' => 'WBS-2026-00002',
+            'tracking_token' => 'TOKEN456',
+            'kategori_id' => $kategori->id,
+            'judul' => 'Laporan WhatsApp Test',
+            'deskripsi' => 'Laporan untuk memvalidasi notifikasi WhatsApp.',
+            'status' => 'menunggu',
+            'is_anonim' => false,
+            'nama_pelapor' => 'Budi',
+            'email_pelapor' => 'budi@example.com',
+            'telepon_pelapor' => '081234567890',
+        ]);
+
+        $this->actingAs($this->wbsUser)->get(route('verifikasi.show', $laporan->id));
+
+        $response = $this->actingAs($this->wbsUser)
+            ->post(route('verifikasi.validate', $laporan->id), [
+                'verification_note' => 'Dokumen bukti valid.',
+            ]);
+
+        $response->assertRedirect(route('verifikasi.index'));
+
+        Http::assertSent(function ($request) use ($laporan, $whatsappBaseUrl) {
+            $body = $request->data();
+
+            return $request->url() === $whatsappBaseUrl . '/send/message'
+                && $body['phone'] === '6281234567890'
+                && str_contains($body['message'], $laporan->nomor_registrasi)
+                && str_contains($body['message'], 'Terverifikasi');
+        });
     }
 
     /**

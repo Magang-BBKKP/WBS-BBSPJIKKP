@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\CompletePhoneRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Services\AuthService;
@@ -61,6 +62,11 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        // Wajib lengkapi nomor WhatsApp aktif (untuk notifikasi)
+        if (empty($user->phone_number)) {
+            return redirect()->route('phone.complete');
+        }
+
         if ($user && $user->can('view-dashboard')) {
             return redirect()->route('dashboard');
         }
@@ -82,6 +88,40 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
         
+        return redirect()->route('home');
+    }
+
+    public function showCompletePhone()
+    {
+        $user = auth()->user();
+
+        if (!empty($user->phone_number)) {
+            return $this->redirectAfterLogin($user);
+        }
+
+        return view('auth.complete-phone');
+    }
+
+    public function storeCompletePhone(CompletePhoneRequest $request)
+    {
+        $user = auth()->user();
+
+        $this->authService->updatePhoneNumber(
+            $user,
+            $request->validated()['phone_number'],
+            $request->ip(),
+            $request->userAgent()
+        );
+
+        return $this->redirectAfterLogin($user);
+    }
+
+    protected function redirectAfterLogin($user)
+    {
+        if ($user && $user->can('view-dashboard')) {
+            return redirect()->route('dashboard');
+        }
+
         return redirect()->route('home');
     }
 

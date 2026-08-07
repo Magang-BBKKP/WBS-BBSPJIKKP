@@ -221,7 +221,7 @@
 <!-- FAQ Section -->
 <section class="py-5 my-5">
     <div class="container text-center mb-5">
-        <h2 class="fw-bold mb-3">Frequently Asked Questions</h2>
+        <h2 class="fw-bold mb-3">Pertanyaan yang Sering Diajukan</h2>
     </div>
     <div class="container">
         <div class="row justify-content-center">
@@ -249,7 +249,7 @@
                         </h2>
                         <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted small pt-0 pb-3 lh-lg">
-                                Laporan Anda akan segera diverifikasi oleh Tim WBS. Jika dinyatakan valid, Kepala BBSPJIKKP akan membentuk Tim Investigasi. Durasi proses tergantung pada kompleksitas pelanggaran dan bukti yang dilampirkan. Anda dapat terus memantau statusnya di halaman Track.
+                                Laporan Anda akan segera diverifikasi oleh Tim WBS. Jika dinyatakan valid, Kepala BBSPJIKKP akan membentuk Tim Investigasi. Durasi proses tergantung pada kompleksitas pelanggaran dan bukti yang dilampirkan. Anda dapat terus memantau statusnya di halaman Lacak.
                             </div>
                         </div>
                     </div>

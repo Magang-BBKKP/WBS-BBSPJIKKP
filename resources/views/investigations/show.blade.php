@@ -39,7 +39,7 @@
                     {{ session('success') }}
                 </div>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
     @endif
 
@@ -55,7 +55,7 @@
                     </ul>
                 </div>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
     @endif
 
@@ -181,7 +181,7 @@
                 
                 @if($investigation->status !== 'completed')
                     <!-- Add Timeline Entry Form -->
-                    <form action="{{ route('investigations.store-timeline', $investigation->id) }}" method="POST" class="mb-4 p-3 rounded-4 bg-light">
+                    <form action="{{ route('investigations.store-timeline', $investigation->id) }}" method="POST" enctype="multipart/form-data" class="mb-4 p-3 rounded-4 bg-light">
                         @csrf
                         <h6 class="fw-bold text-dark mb-3 small"><i class="bi bi-plus-circle-fill text-primary me-1"></i> Tambah Perkembangan Baru</h6>
                         
@@ -194,6 +194,16 @@
                                 <label for="date" class="form-label small fw-semibold mb-1 text-muted">Tanggal Perkembangan</label>
                                 <input type="datetime-local" name="date" id="date" class="form-control form-control-sm rounded-3" value="{{ old('date', now()->format('Y-m-d\TH:i')) }}" max="{{ now()->format('Y-m-d\TH:i') }}" required>
                             </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label for="evidences" class="form-label small fw-semibold mb-1 text-muted">
+                                <i class="bi bi-paperclip me-1"></i> Bukti Konkret Pendukung
+                                <span class="text-muted fw-normal">(opsional, maks. 10 file)</span>
+                            </label>
+                            <input type="file" name="evidences[]" id="evidences" class="form-control form-control-sm rounded-3" multiple
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.zip">
+                            <div class="form-text small text-muted">Format: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, ZIP. Max: 10 MB per file. File disimpan secara aman di luar direktori publik.</div>
                         </div>
                         
                         <div class="text-end mt-3">
@@ -219,6 +229,40 @@
                                         <span class="small text-muted fw-bold"><i class="bi bi-calendar3 me-1"></i> {{ $timeline->date->translatedFormat('d M Y, H:i') }}</span>
                                     </div>
                                     <p class="mb-0 text-dark small">{{ $timeline->description }}</p>
+
+                                    @if($timeline->evidences->count() > 0)
+                                        <div class="mt-3 pt-2" style="border-top: 1px dashed #dee2e6;">
+                                            <span class="small fw-semibold text-primary d-inline-flex align-items-center gap-1 mb-2">
+                                                <i class="bi bi-paperclip"></i> Bukti Konkret ({{ $timeline->evidences->count() }})
+                                            </span>
+                                            <div class="d-flex flex-column gap-1">
+                                                @foreach($timeline->evidences as $evidence)
+                                                    @php
+                                                        $evExt = strtolower(pathinfo($evidence->file_name, PATHINFO_EXTENSION));
+                                                        $evIcon = 'file-earmark-text';
+                                                        $evColor = '#6c757d';
+                                                        if(in_array($evExt, ['pdf'])) { $evIcon = 'file-earmark-pdf'; $evColor = '#dc3545'; }
+                                                        elseif(in_array($evExt, ['jpg','jpeg','png'])) { $evIcon = 'file-earmark-image'; $evColor = '#0d6efd'; }
+                                                        elseif(in_array($evExt, ['doc','docx'])) { $evIcon = 'file-earmark-word'; $evColor = '#0dcaf0'; }
+                                                        elseif(in_array($evExt, ['xls','xlsx'])) { $evIcon = 'file-earmark-excel'; $evColor = '#198754'; }
+                                                        elseif(in_array($evExt, ['zip'])) { $evIcon = 'file-earmark-zip'; $evColor = '#6f42c1'; }
+                                                    @endphp
+                                                    <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-white border">
+                                                        <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                                            <i class="bi bi-{{ $evIcon }}" style="color: {{ $evColor }}; font-size: 1.1rem;"></i>
+                                                            <div class="overflow-hidden">
+                                                                <div class="fw-semibold text-dark text-truncate small" style="max-width: 220px;" title="{{ $evidence->file_name }}">{{ $evidence->file_name }}</div>
+                                                                <small class="text-muted" style="font-size: 0.65rem;">{{ number_format($evidence->file_size / 1024, 2) }} KB</small>
+                                                            </div>
+                                                        </div>
+                                                        <a href="{{ route('investigations.download-timeline-evidence', ['id' => $investigation->id, 'timelineId' => $timeline->id, 'evidenceId' => $evidence->id]) }}" class="btn btn-sm btn-light rounded-circle text-primary border" title="Unduh bukti">
+                                                            <i class="bi bi-download" style="font-size: 0.8rem;"></i>
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

@@ -4,13 +4,16 @@ namespace App\Services;
 
 use App\Models\Investigation;
 use App\Models\InvestigationTimeline;
+use App\Models\InvestigationTimelineEvidence;
 use App\Models\InvestigationDocument;
 use App\Models\Laporan;
 use App\Models\LaporanTimeline;
 use App\Repositories\Contracts\InvestigationRepositoryInterface;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -35,7 +38,13 @@ class InvestigationService extends BaseService
      */
     public function getInvestigationDetails(int $id): Investigation
     {
-        return $this->investigationRepository->findWithDetails($id);
+        $investigation = $this->investigationRepository->findWithDetails($id);
+
+        if (!$investigation) {
+            throw (new ModelNotFoundException)->setModel(Investigation::class, $id);
+        }
+
+        return $investigation;
     }
 
     /**
@@ -58,6 +67,34 @@ class InvestigationService extends BaseService
                 'description' => $data['description'],
                 'date' => $data['date'],
             ]);
+
+            // Store evidence attachments (if any)
+            $evidenceFiles = $data['evidences'] ?? [];
+            $storedEvidence = [];
+
+            if ($evidenceFiles instanceof UploadedFile) {
+                $evidenceFiles = [$evidenceFiles];
+            }
+
+            foreach (Arr::wrap($evidenceFiles) as $evidenceFile) {
+                if (!($evidenceFile instanceof UploadedFile)) {
+                    continue;
+                }
+
+                $originalName = $evidenceFile->getClientOriginalName();
+                $fileName     = time() . '_' . uniqid() . '.' . $evidenceFile->getClientOriginalExtension();
+
+                $path = $evidenceFile->storeAs('investigations/' . $investigation->id . '/timeline-evidence', $fileName, 'local');
+
+                $storedEvidence[] = InvestigationTimelineEvidence::create([
+                    'investigation_timeline_id' => $timeline->id,
+                    'file_name' => $originalName,
+                    'file_path' => $path,
+                    'mime_type' => $evidenceFile->getMimeType(),
+                    'file_size' => $evidenceFile->getSize(),
+                    'uploaded_by' => $userId,
+                ]);
+            }
 
             // Auto-activate investigation if it was pending
             if ($investigation->status === Investigation::STATUS_PENDING) {

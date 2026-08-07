@@ -380,18 +380,18 @@
                 <div class="sidebar-card">
                     <div class="sidebar-card-body">
                         <div class="anonymity-icon"><i class="bi bi-shield-lock-fill"></i></div>
-                        <h6 class="fw-bold mb-2" style="color:#1e293b;">Anonymity Guaranteed</h6>
+                        <h6 class="fw-bold mb-2" style="color:#1e293b;">Anonimitas Terjamin</h6>
                         <p class="text-muted" style="font-size:.875rem; line-height:1.6;">
                             Identitas Anda dienkripsi dan tersembunyi secara default. Kami tidak melacak alamat IP atau metadata yang dapat menghubungkan Anda ke laporan ini.
                         </p>
                         <div class="anonymity-check-item">
-                            <i class="bi bi-check-circle-fill"></i> AES-256 Encryption
+                            <i class="bi bi-check-circle-fill"></i> Enkripsi AES-256
                         </div>
                         <div class="anonymity-check-item">
-                            <i class="bi bi-check-circle-fill"></i> No IP Logging
+                            <i class="bi bi-check-circle-fill"></i> Tanpa Pencatatan IP
                         </div>
                         <div class="anonymity-check-item">
-                            <i class="bi bi-check-circle-fill"></i> CSRF Protected
+                            <i class="bi bi-check-circle-fill"></i> Terlindungi CSRF
                         </div>
                     </div>
                 </div>
@@ -399,7 +399,7 @@
                 {{-- Privacy Notice --}}
                 <div class="sidebar-card">
                     <div class="sidebar-card-body">
-                        <h6 class="fw-bold mb-3" style="color:#1e293b;">Privacy Notice</h6>
+                        <h6 class="fw-bold mb-3" style="color:#1e293b;">Pemberitahuan Privasi</h6>
                         <div class="privacy-quote">
                             "Integritas adalah inti dari tata kelola kami. Seluruh laporan diproses sesuai SOP Pengelolaan Whistleblowing System BBSPJIKKP."
                         </div>
@@ -415,8 +415,8 @@
                 {{-- Support Line --}}
                 <div class="support-banner">
                     <div class="support-banner-bg"></div>
-                    <div class="support-label">Need Help?</div>
-                    <div class="support-title">Confidential Support Line</div>
+                    <div class="support-label">Butuh Bantuan?</div>
+                    <div class="support-title">Saluran Bantuan Rahasia</div>
                     <div class="support-number">(0274) XXX-XXXX — BBSPJIKKP</div>
                 </div>
 

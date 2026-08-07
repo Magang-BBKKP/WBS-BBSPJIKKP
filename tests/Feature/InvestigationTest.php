@@ -7,6 +7,7 @@ use App\Models\Laporan;
 use App\Models\Kategori;
 use App\Models\Investigation;
 use App\Models\InvestigationTimeline;
+use App\Models\InvestigationTimelineEvidence;
 use App\Models\InvestigationDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -121,6 +122,68 @@ class InvestigationTest extends TestCase
             'investigation_id' => $this->investigation->id,
             'description' => 'Melakukan pemeriksaan dokumen.',
         ]);
+    }
+
+    /**
+     * Test investigator can add timeline with concrete evidence attachments.
+     */
+    public function test_investigator_can_add_timeline_with_evidence()
+    {
+        Storage::fake('local');
+
+        $file = UploadedFile::fake()->create('bukti_wawancara.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->investigator1)
+            ->post(route('investigations.store-timeline', $this->investigation->id), [
+                'description' => 'Melakukan wawancara terhadap saksi A.',
+                'date' => now()->format('Y-m-d H:i:s'),
+                'evidences' => [$file],
+            ]);
+
+        $response->assertRedirect(route('investigations.show', $this->investigation->id));
+        $this->assertDatabaseHas('investigation_timelines', [
+            'investigation_id' => $this->investigation->id,
+            'description' => 'Melakukan wawancara terhadap saksi A.',
+        ]);
+
+        $this->assertDatabaseHas('investigation_timeline_evidences', [
+            'file_name' => 'bukti_wawancara.pdf',
+        ]);
+
+        $evidence = InvestigationTimelineEvidence::first();
+        Storage::disk('local')->assertExists($evidence->file_path);
+
+        // Assigned investigator can download the evidence securely.
+        $download = $this->actingAs($this->investigator1)
+            ->get(route('investigations.download-timeline-evidence', [
+                'id' => $this->investigation->id,
+                'timelineId' => $evidence->investigation_timeline_id,
+                'evidenceId' => $evidence->id,
+            ]));
+
+        $download->assertOk();
+        $download->assertDownload('bukti_wawancara.pdf');
+    }
+
+    /**
+     * Test timeline can be added without evidence.
+     */
+    public function test_investigator_can_add_timeline_without_evidence()
+    {
+        Storage::fake('local');
+
+        $response = $this->actingAs($this->investigator1)
+            ->post(route('investigations.store-timeline', $this->investigation->id), [
+                'description' => 'Hanya catatan perkembangan tanpa bukti.',
+                'date' => now()->format('Y-m-d H:i:s'),
+            ]);
+
+        $response->assertRedirect(route('investigations.show', $this->investigation->id));
+        $this->assertDatabaseHas('investigation_timelines', [
+            'investigation_id' => $this->investigation->id,
+            'description' => 'Hanya catatan perkembangan tanpa bukti.',
+        ]);
+        $this->assertDatabaseCount('investigation_timeline_evidences', 0);
     }
 
     /**

@@ -229,7 +229,7 @@
     <!-- Header Card -->
     <div class="tracking-card p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <div class="text-muted small fw-medium text-uppercase mb-1">Report ID</div>
+            <div class="text-muted small fw-medium text-uppercase mb-1">ID Laporan</div>
             <h2 class="h4 mb-0 fw-bold">#{{ $laporan->nomor_registrasi }}</h2>
         </div>
         <div class="d-flex align-items-center gap-4">
@@ -239,8 +239,8 @@
                 </span>
             </div>
             <div class="text-end border-start ps-4 d-none d-md-block">
-                <div class="text-muted small fw-medium">Last Updated</div>
-                <div class="fw-semibold">{{ $laporan->updated_at->format('M d, Y') }}</div>
+                <div class="text-muted small fw-medium">Diperbarui</div>
+                <div class="fw-semibold">{{ $laporan->updated_at->format('d M Y') }}</div>
             </div>
         </div>
     </div>
@@ -273,7 +273,7 @@
             
             <!-- Process Status -->
             <div class="tracking-card p-4">
-                <h5 class="fw-bold mb-4">Process Status</h5>
+                <h5 class="fw-bold mb-4">Status Proses</h5>
                 
                 @php
                     $steps = ['menunggu', 'verifikasi', 'investigasi', 'selesai'];
@@ -284,19 +284,19 @@
                 <div class="stepper-wrapper">
                     <div class="stepper-item {{ $currentIdx >= 0 ? 'completed' : '' }}">
                         <div class="step-counter"><i class="bi bi-check-lg"></i></div>
-                        <div class="step-name">Received</div>
+                        <div class="step-name">Diterima</div>
                     </div>
                     <div class="stepper-item {{ $currentIdx >= 1 ? 'completed' : '' }} {{ $currentIdx == 0 ? 'active' : '' }}">
                         <div class="step-counter">{!! $currentIdx >= 1 ? '<i class="bi bi-check-lg"></i>' : '' !!}</div>
-                        <div class="step-name">Under Review</div>
+                        <div class="step-name">Ditinjau</div>
                     </div>
                     <div class="stepper-item {{ $currentIdx >= 2 ? 'completed' : '' }} {{ $currentIdx == 1 ? 'active' : '' }}">
                         <div class="step-counter">{!! $currentIdx >= 2 ? '<i class="bi bi-check-lg"></i>' : '' !!}</div>
-                        <div class="step-name">Investigation</div>
+                        <div class="step-name">Investigasi</div>
                     </div>
                     <div class="stepper-item {{ $currentIdx >= 3 ? 'completed' : '' }} {{ $currentIdx == 2 ? 'active' : '' }}">
                         <div class="step-counter"><i class="bi bi-clock"></i></div>
-                        <div class="step-name">Resolved</div>
+                        <div class="step-name">Selesai</div>
                     </div>
                 </div>
 
@@ -304,10 +304,10 @@
                     <div class="timeline ps-md-5 ms-md-4">
                         @foreach($laporan->timelines->sortByDesc('created_at') as $tl)
                             <div class="timeline-item">
-                                <div class="timeline-date d-none d-md-block">{{ $tl->created_at->format('M d') }}</div>
+                                <div class="timeline-date d-none d-md-block">{{ $tl->created_at->format('d M') }}</div>
                                 <h6 class="fw-bold mb-1">{{ $tl->title }}</h6>
                                 <p class="text-muted small mb-0">{{ $tl->description }}</p>
-                                <div class="text-muted small d-md-none mt-1"><i class="bi bi-calendar3 me-1"></i>{{ $tl->created_at->format('M d, Y') }}</div>
+                                <div class="text-muted small d-md-none mt-1"><i class="bi bi-calendar3 me-1"></i>{{ $tl->created_at->format('d M Y') }}</div>
                             </div>
                         @endforeach
                     </div>
@@ -326,8 +326,8 @@
                             <i class="bi bi-shield-lock-fill"></i>
                         </div>
                         <div>
-                            <h6 class="mb-0 fw-bold">Secure Channel</h6>
-                            <small class="text-success fw-medium"><i class="bi bi-shield-check me-1"></i>Anonymity Guard Active</small>
+                            <h6 class="mb-0 fw-bold">Saluran Aman</h6>
+                            <small class="text-success fw-medium"><i class="bi bi-shield-check me-1"></i>Perlindungan Anonimitas Aktif</small>
                         </div>
                     </div>
                     <i class="bi bi-info-circle text-muted" role="button" title="Pesan Anda dienkripsi dan anonim"></i>
@@ -364,7 +364,7 @@
                     <form action="{{ route('track.message.store', $laporan->tracking_token) }}" method="POST" id="chatForm">
                         @csrf
                         <div class="chat-input-wrapper">
-                            <input type="text" name="message" id="messageInput" class="chat-input" placeholder="Type a secure message..." required autocomplete="off">
+                            <input type="text" name="message" id="messageInput" class="chat-input" placeholder="Ketik pesan aman..." required autocomplete="off">
                             <button type="submit" class="chat-send-btn">
                                 <i class="bi bi-send-fill"></i>
                             </button>
@@ -381,9 +381,9 @@
             <!-- Evidence -->
             <div class="tracking-card p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold mb-0">Evidence</h5>
+                    <h5 class="fw-bold mb-0">Bukti</h5>
                     <button class="btn btn-sm btn-link text-decoration-none p-0 fw-medium" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                        + Add New
+                        + Tambah Baru
                     </button>
                 </div>
 
@@ -419,26 +419,26 @@
             <div class="security-policy mb-4 shadow-sm">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <i class="bi bi-shield-check fs-4 text-info"></i>
-                    <h5 class="mb-0 fw-bold">Security Policy</h5>
+                    <h5 class="mb-0 fw-bold">Kebijakan Keamanan</h5>
                 </div>
                 <p class="small" style="line-height: 1.6; color: #e9ecef;">
-                    Your identity remains encrypted and unknown even to the investigators unless you choose to disclose it. Our zero-knowledge protocols ensure maximum whistleblower protection.
+                    Identitas Anda tetap terenkripsi dan tidak diketahui bahkan oleh investigator kecuali Anda memilih untuk mengungkapkannya. Protokol zero-knowledge kami memastikan perlindungan maksimal bagi pelapor.
                 </p>
                 <a href="#" class="text-info text-decoration-none small d-inline-flex align-items-center mt-2">
-                    Learn more about encryption <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.75rem;"></i>
+                    Pelajari lebih lanjut tentang enkripsi <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.75rem;"></i>
                 </a>
             </div>
 
             <!-- Need Help -->
             <div class="tracking-card p-4">
-                <h5 class="fw-bold mb-3">Need Help?</h5>
+                <h5 class="fw-bold mb-3">Butuh Bantuan?</h5>
                 <div class="list-group list-group-flush">
                     <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 py-3 text-muted">
-                        How long does an investigation take?
+                        Berapa lama proses investigasi berlangsung?
                         <i class="bi bi-chevron-right small"></i>
                     </a>
                     <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 py-3 text-muted">
-                        Who will see my information?
+                        Siapa yang dapat melihat informasi saya?
                         <i class="bi bi-chevron-right small"></i>
                     </a>
                 </div>
@@ -453,21 +453,21 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow">
       <div class="modal-header border-bottom-0">
-        <h5 class="modal-title fw-bold">Add Evidence</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold">Tambah Bukti</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <form action="{{ route('track.evidence.store', $laporan->tracking_token) }}" method="POST" enctype="multipart/form-data">
           @csrf
           <div class="modal-body">
             <div class="mb-3">
-                <label class="form-label text-muted small fw-medium">Upload File (Max 10MB)</label>
+                <label class="form-label text-muted small fw-medium">Unggah File (Maks 10MB)</label>
                 <input type="file" class="form-control" name="file" required accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
                 <div class="form-text">Format: PDF, JPG, PNG, DOCX</div>
             </div>
           </div>
           <div class="modal-footer border-top-0">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Upload Evidence</button>
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary">Unggah Bukti</button>
           </div>
       </form>
     </div>
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const tempHtml = `
             <div class="chat-message chat-pelapor opacity-50">
                 <div>${content}</div>
-                <div class="chat-time">Sending...</div>
+                <div class="chat-time">Mengirim...</div>
             </div>`;
         chatContainer.innerHTML += tempHtml;
         scrollToBottom();

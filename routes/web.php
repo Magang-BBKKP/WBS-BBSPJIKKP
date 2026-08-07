@@ -40,7 +40,11 @@ Route::middleware('guest')->group(function () {
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
+    // Lengkapi nomor WhatsApp (dipakai setelah login via Google)
+    Route::get('/complete-phone', [AuthController::class, 'showCompletePhone'])->name('phone.complete');
+    Route::post('/complete-phone', [AuthController::class, 'storeCompletePhone']);
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Pelaporan (wajib login)
@@ -73,6 +77,7 @@ Route::middleware('auth')->group(function () {
     // Investigasi (Investigators and Super Admins)
     Route::resource('investigations', \App\Http\Controllers\InvestigationController::class)->only(['index', 'show']);
     Route::post('investigations/{id}/timeline', [\App\Http\Controllers\InvestigationController::class, 'storeTimeline'])->name('investigations.store-timeline');
+    Route::get('investigations/{id}/timeline/{timelineId}/evidence/{evidenceId}/download', [\App\Http\Controllers\InvestigationController::class, 'downloadTimelineEvidence'])->name('investigations.download-timeline-evidence');
     Route::post('investigations/{id}/document', [\App\Http\Controllers\InvestigationController::class, 'storeDocument'])->name('investigations.store-document');
     Route::get('investigations/{id}/document/{docId}/download', [\App\Http\Controllers\InvestigationController::class, 'downloadDocument'])->name('investigations.download-document');
     Route::post('investigations/{id}/result', [\App\Http\Controllers\InvestigationController::class, 'updateResult'])->name('investigations.update-result');

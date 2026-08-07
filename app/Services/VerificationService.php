@@ -8,6 +8,7 @@ use App\Models\LaporanTimeline;
 use App\Repositories\Contracts\LaporanRepositoryInterface;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
 use App\Notifications\LaporanStatusUpdated;
+use App\Services\WhatsAppNotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
@@ -16,7 +17,8 @@ class VerificationService extends BaseService
 {
     public function __construct(
         protected LaporanRepositoryInterface $laporanRepository,
-        protected AuditLogRepositoryInterface $auditLogRepository
+        protected AuditLogRepositoryInterface $auditLogRepository,
+        protected WhatsAppNotificationService $whatsAppNotificationService
     ) {}
 
     /**
@@ -61,7 +63,7 @@ class VerificationService extends BaseService
      */
     public function validateReport(int $id, array $data): Laporan
     {
-        return DB::transaction(function () use ($id, $data) {
+        $laporan = DB::transaction(function () use ($id, $data) {
             $laporan = $this->laporanRepository->find($id);
 
             // Validasi status
@@ -98,11 +100,14 @@ class VerificationService extends BaseService
                 request()->userAgent()
             );
 
-            // Kirim notifikasi ke pelapor
-            $this->sendNotification($laporan);
-
             return $laporan;
         });
+
+        // Kirim notifikasi setelah transaksi commit agar perubahan status tidak
+        // tertahan oleh proses pengiriman email/WhatsApp.
+        $this->sendNotification($laporan);
+
+        return $laporan;
     }
 
     /**
@@ -110,7 +115,7 @@ class VerificationService extends BaseService
      */
     public function clarifyReport(int $id, array $data): Laporan
     {
-        return DB::transaction(function () use ($id, $data) {
+        $laporan = DB::transaction(function () use ($id, $data) {
             $laporan = $this->laporanRepository->find($id);
 
             // Validasi status
@@ -153,11 +158,12 @@ class VerificationService extends BaseService
                 request()->userAgent()
             );
 
-            // Kirim notifikasi ke pelapor
-            $this->sendNotification($laporan);
-
             return $laporan;
         });
+
+        $this->sendNotification($laporan);
+
+        return $laporan;
     }
 
     /**
@@ -165,7 +171,7 @@ class VerificationService extends BaseService
      */
     public function rejectReport(int $id, array $data): Laporan
     {
-        return DB::transaction(function () use ($id, $data) {
+        $laporan = DB::transaction(function () use ($id, $data) {
             $laporan = $this->laporanRepository->find($id);
 
             // Validasi status
@@ -196,11 +202,12 @@ class VerificationService extends BaseService
                 request()->userAgent()
             );
 
-            // Kirim notifikasi ke pelapor
-            $this->sendNotification($laporan);
-
             return $laporan;
         });
+
+        $this->sendNotification($laporan);
+
+        return $laporan;
     }
 
     /**
@@ -234,7 +241,11 @@ class VerificationService extends BaseService
      */
     protected function sendNotification(Laporan $laporan): void
     {
-        if (!$laporan->is_anonim && $laporan->email_pelapor) {
+        if ($laporan->is_anonim) {
+            return;
+        }
+
+        if ($laporan->email_pelapor) {
             try {
                 Notification::route('mail', $laporan->email_pelapor)
                     ->notify(new LaporanStatusUpdated($laporan));
@@ -244,5 +255,7 @@ class VerificationService extends BaseService
                 logger()->error('Gagal mengirim email notifikasi WBS: ' . $e->getMessage());
             }
         }
+
+        $this->whatsAppNotificationService->sendStatusUpdate($laporan);
     }
 }

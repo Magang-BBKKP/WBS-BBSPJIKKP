@@ -45,7 +45,7 @@ class InvestigationRepository extends BaseRepository implements InvestigationRep
             ->with([
                 'laporan.kategori', 
                 'laporan.buktis',
-                'timelines', 
+                'timelines.evidences', 
                 'documents.uploader', 
                 'investigator'
             ])

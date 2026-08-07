@@ -64,13 +64,17 @@ class KepalaController extends Controller
 
         DB::transaction(function () use ($laporan, $request) {
             // Buat record investigasi
-            Investigation::create([
+            $investigation = Investigation::create([
                 'laporan_id'     => $laporan->id,
                 'investigator_id'=> $request->investigator_id,
                 'assigned_by'    => auth()->id(),
                 'assigned_at'    => now(),
                 'status'         => Investigation::STATUS_ACTIVE,
             ]);
+
+            // Notifikasi WhatsApp ke investigator yang ditugaskan
+            app(\App\Services\WhatsAppNotificationService::class)
+                ->notifyInvestigatorAssigned($laporan, $investigation->investigator);
 
             // Update status laporan ke investigasi
             $laporan->update(['status' => Laporan::STATUS_INVESTIGASI]);

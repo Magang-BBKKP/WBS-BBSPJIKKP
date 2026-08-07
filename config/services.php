@@ -35,6 +35,15 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'enabled' => env('WHATSAPP_API_ENABLED', true),
+        'base_url' => env('WHATSAPP_API_URL', 'http://host.docker.internal:3000'),
+        'device_id' => env('WHATSAPP_API_DEVICE_ID'),
+        'timeout' => env('WHATSAPP_API_TIMEOUT', 10),
+        'kepala_phone' => env('WHATSAPP_KEPALA_PHONE'),
+        'investigator_fallback_phone' => env('WHATSAPP_INVESTIGATOR_FALLBACK_PHONE'),
+    ],
+
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
