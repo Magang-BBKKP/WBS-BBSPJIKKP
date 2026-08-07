@@ -10,6 +10,7 @@ use App\Models\Laporan;
 use App\Models\LaporanTimeline;
 use App\Repositories\Contracts\InvestigationRepositoryInterface;
 use App\Repositories\Contracts\AuditLogRepositoryInterface;
+use App\Services\WhatsAppNotificationService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -22,7 +23,8 @@ class InvestigationService extends BaseService
 {
     public function __construct(
         protected InvestigationRepositoryInterface $investigationRepository,
-        protected AuditLogRepositoryInterface $auditLogRepository
+        protected AuditLogRepositoryInterface $auditLogRepository,
+        protected WhatsAppNotificationService $whatsAppNotificationService
     ) {}
 
     /**
@@ -177,7 +179,7 @@ class InvestigationService extends BaseService
      */
     public function submitFinalResult(int $investigationId, array $data, int $userId, string $ip, string $userAgent): Investigation
     {
-        return DB::transaction(function () use ($investigationId, $data, $userId, $ip, $userAgent) {
+        $investigation = DB::transaction(function () use ($investigationId, $data, $userId, $ip, $userAgent) {
             $investigation = $this->investigationRepository->find($investigationId);
 
             if ($investigation->status === Investigation::STATUS_COMPLETED) {
@@ -220,6 +222,16 @@ class InvestigationService extends BaseService
 
             return $investigation;
         });
+
+        // Notifikasi WhatsApp ke Kepala Balai bahwa investigasi selesai & siap ditindaklanjuti
+        $this->notifyKepalaInvestigationCompleted($investigation);
+
+        return $investigation;
+    }
+
+    private function notifyKepalaInvestigationCompleted(Investigation $investigation): void
+    {
+        $this->whatsAppNotificationService->notifyKepalaInvestigationCompleted($investigation->laporan);
     }
 
     /**

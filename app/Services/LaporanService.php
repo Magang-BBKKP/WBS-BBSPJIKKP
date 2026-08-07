@@ -59,8 +59,8 @@ class LaporanService extends BaseService
             // Notifikasi WhatsApp ke pelapor dengan unique access code
             app(\App\Services\WhatsAppNotificationService::class)->notifyPelaporTrackingCode($laporan);
 
-            // Notifikasi WhatsApp ke Kepala Balai untuk laporan baru
-            app(\App\Services\WhatsAppNotificationService::class)->notifyKepalaNewReport($laporan);
+            // Notifikasi WhatsApp ke Tim WBS untuk laporan baru yang menunggu verifikasi
+            app(\App\Services\WhatsAppNotificationService::class)->notifyTimWbsNewReport($laporan);
 
             // 5. Upload & simpan bukti
             if (!empty($files)) {

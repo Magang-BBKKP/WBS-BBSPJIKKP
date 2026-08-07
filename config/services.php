@@ -41,6 +41,7 @@ return [
         'device_id' => env('WHATSAPP_API_DEVICE_ID'),
         'timeout' => env('WHATSAPP_API_TIMEOUT', 10),
         'kepala_phone' => env('WHATSAPP_KEPALA_PHONE'),
+        'timwbs_phone' => env('WHATSAPP_TIMWBS_PHONE'),
         'investigator_fallback_phone' => env('WHATSAPP_INVESTIGATOR_FALLBACK_PHONE'),
     ],
 

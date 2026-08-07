@@ -107,6 +107,9 @@ class VerificationService extends BaseService
         // tertahan oleh proses pengiriman email/WhatsApp.
         $this->sendNotification($laporan);
 
+        // Notifikasi WhatsApp ke Kepala Balai bahwa laporan terverifikasi & siap diinvestigasi
+        $this->whatsAppNotificationService->notifyKepalaReportVerified($laporan);
+
         return $laporan;
     }
 

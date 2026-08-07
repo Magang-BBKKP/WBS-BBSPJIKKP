@@ -175,6 +175,48 @@ class VerificationTest extends TestCase
     }
 
     /**
+     * Kepala Balai receives WhatsApp notification when a report is verified
+     * and ready for investigation.
+     */
+    public function test_validate_report_notifies_kepala_that_report_is_ready_for_investigation(): void
+    {
+        config([
+            'services.whatsapp.enabled' => true,
+            'services.whatsapp.kepala_phone' => '6282384355225',
+        ]);
+
+        $whatsappBaseUrl = rtrim((string) config('services.whatsapp.base_url', 'http://localhost:3000'), '/');
+
+        Http::fake([
+            $whatsappBaseUrl . '/send/message' => Http::response([
+                'code' => 'SUCCESS',
+                'message' => 'Success',
+            ], 200),
+        ]);
+
+        $this->actingAs($this->wbsUser)->get(route('verifikasi.show', $this->laporan->id));
+
+        $response = $this->actingAs($this->wbsUser)
+            ->post(route('verifikasi.validate', $this->laporan->id), [
+                'verification_note' => 'Dokumen bukti valid.',
+            ]);
+
+        $response->assertRedirect(route('verifikasi.index'));
+
+        $this->laporan->refresh();
+        $this->assertEquals('valid', $this->laporan->status);
+
+        Http::assertSent(function ($request) use ($whatsappBaseUrl) {
+            $body = $request->data();
+
+            return $request->url() === $whatsappBaseUrl . '/send/message'
+                && $body['phone'] === '6282384355225'
+                && str_contains($body['message'], $this->laporan->nomor_registrasi)
+                && str_contains($body['message'], 'siap untuk diinvestigasi');
+        });
+    }
+
+    /**
      * Test asking for clarification (Action B)
      */
     public function test_clarification_report_and_response(): void

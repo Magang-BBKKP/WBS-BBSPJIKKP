@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Laporan;
 use App\Models\Kategori;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class LaporanTest extends TestCase
@@ -133,5 +134,53 @@ class LaporanTest extends TestCase
         $this->assertEquals('Ahmad Pelapor Beda', $laporan->nama_pelapor);
         $this->assertEquals('beda@example.com', $laporan->email_pelapor);
         $this->assertEquals('08999999999', $laporan->telepon_pelapor);
+    }
+
+    /**
+     * New report triggers WhatsApp notifications to the pelapor (access code)
+     * and Tim WBS, but NOT to Kepala Balai (Kepala is only notified when the
+     * report is verified and ready for investigation).
+     */
+    public function test_new_report_sends_whatsapp_notification_to_pelapor_and_tim_wbs_only(): void
+    {
+        config([
+            'services.whatsapp.enabled' => true,
+            'services.whatsapp.kepala_phone' => '6281111111111',
+            'services.whatsapp.timwbs_phone' => '62895320292890',
+            'services.whatsapp.investigator_fallback_phone' => null,
+        ]);
+
+        $whatsappBaseUrl = rtrim((string) config('services.whatsapp.base_url', 'http://localhost:3000'), '/');
+
+        Http::fake([
+            $whatsappBaseUrl . '/send/message' => Http::response([
+                'code' => 'SUCCESS',
+                'message' => 'Success',
+            ], 200),
+        ]);
+
+        $this->actingAs($this->user)
+            ->post(route('laporan.store'), [
+                'kategori_id' => $this->kategori->id,
+                'judul' => 'Dugaan Pungutan Liar',
+                'deskripsi' => 'Deskripsi kejadian minimal harus lima puluh karakter agar memenuhi aturan validasi sistem.',
+                'tanggal_kejadian' => now()->format('Y-m-d'),
+                'lokasi' => 'Kantor',
+                'is_anonim' => '1',
+            ]);
+
+        $laporan = Laporan::where('judul', 'Dugaan Pungutan Liar')->first();
+
+        $phonesSent = [];
+
+        Http::assertSent(function ($request) use (&$phonesSent) {
+            $phonesSent[] = $request->data()['phone'] ?? null;
+
+            return true;
+        });
+
+        $this->assertContains('62895320292890', $phonesSent, 'Tim WBS harus menerima notifikasi laporan baru.');
+        $this->assertContains('628123456789', $phonesSent, 'Pelapor harus menerima notifikasi kode akses.');
+        $this->assertNotContains('6281111111111', $phonesSent, 'Kepala tidak boleh menerima notifikasi saat laporan baru masuk.');
     }
 }

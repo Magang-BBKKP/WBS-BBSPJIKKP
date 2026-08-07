@@ -23,7 +23,7 @@ class WhatsAppNotificationService
         $this->sendToPhone($phoneNumber, $this->buildStatusMessage($laporan));
     }
 
-    public function notifyKepalaNewReport(Laporan $laporan): void
+    public function notifyKepalaReportVerified(Laporan $laporan): void
     {
         if (!config('services.whatsapp.enabled', true)) {
             return;
@@ -35,7 +35,37 @@ class WhatsAppNotificationService
             return;
         }
 
-        $this->sendToPhone($phoneNumber, $this->buildNewReportMessage($laporan));
+        $this->sendToPhone($phoneNumber, $this->buildReportVerifiedMessage($laporan));
+    }
+
+    public function notifyKepalaInvestigationCompleted(Laporan $laporan): void
+    {
+        if (!config('services.whatsapp.enabled', true)) {
+            return;
+        }
+
+        $phoneNumber = $this->normalizePhoneNumber(config('services.whatsapp.kepala_phone'));
+
+        if ($phoneNumber === null) {
+            return;
+        }
+
+        $this->sendToPhone($phoneNumber, $this->buildInvestigationCompletedMessage($laporan));
+    }
+
+    public function notifyTimWbsNewReport(Laporan $laporan): void
+    {
+        if (!config('services.whatsapp.enabled', true)) {
+            return;
+        }
+
+        $phoneNumber = $this->normalizePhoneNumber(config('services.whatsapp.timwbs_phone'));
+
+        if ($phoneNumber === null) {
+            return;
+        }
+
+        $this->sendToPhone($phoneNumber, $this->buildTimWbsNewReportMessage($laporan));
     }
 
     public function notifyPelaporTrackingCode(Laporan $laporan): void
@@ -104,15 +134,39 @@ class WhatsAppNotificationService
         }
     }
 
-    protected function buildNewReportMessage(Laporan $laporan): string
+    protected function buildReportVerifiedMessage(Laporan $laporan): string
     {
         return implode(PHP_EOL . PHP_EOL, [
             'Kepada Kepala Balai,',
-            'Ada laporan WBS baru diterima di sistem.',
+            'Sebuah laporan WBS telah terverifikasi dan siap untuk diinvestigasi.',
             'Nomor Registrasi: #' . $laporan->nomor_registrasi,
             'Judul: ' . ($laporan->judul ?: '-'),
             'Kategori: ' . ($laporan->kategori->nama ?? '-'),
-            'Silakan tinjau laporan tersebut di dashboard WBS.',
+            'Silakan buka sistem WBS untuk membentuk tim investigasi pada laporan tersebut.',
+        ]);
+    }
+
+    protected function buildInvestigationCompletedMessage(Laporan $laporan): string
+    {
+        return implode(PHP_EOL . PHP_EOL, [
+            'Kepada Kepala Balai,',
+            'Hasil investigasi untuk sebuah laporan WBS telah selesai dan siap untuk ditindaklanjuti.',
+            'Nomor Registrasi: #' . $laporan->nomor_registrasi,
+            'Judul: ' . ($laporan->judul ?: '-'),
+            'Kategori: ' . ($laporan->kategori->nama ?? '-'),
+            'Silakan buka sistem WBS untuk menetapkan tindak lanjut pada laporan tersebut.',
+        ]);
+    }
+
+    protected function buildTimWbsNewReportMessage(Laporan $laporan): string
+    {
+        return implode(PHP_EOL . PHP_EOL, [
+            'Kepada Tim WBS,',
+            'Ada laporan WBS baru yang masuk dan menunggu verifikasi.',
+            'Nomor Registrasi: #' . $laporan->nomor_registrasi,
+            'Judul: ' . ($laporan->judul ?: '-'),
+            'Kategori: ' . ($laporan->kategori->nama ?? '-'),
+            'Silakan buka sistem WBS untuk melakukan verifikasi laporan tersebut.',
         ]);
     }
 

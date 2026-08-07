@@ -11,6 +11,7 @@ use App\Models\InvestigationTimelineEvidence;
 use App\Models\InvestigationDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -230,5 +231,46 @@ class InvestigationTest extends TestCase
             'final_result' => 'Terbukti menerima suap sebesar Rp 50.000.000.',
             'recommendation' => 'Pemberhentian tidak dengan hormat.',
         ]);
+    }
+
+    /**
+     * Kepala Balai receives WhatsApp notification when investigation is
+     * completed and ready for follow-up.
+     */
+    public function test_completed_investigation_notifies_kepala_for_follow_up()
+    {
+        config([
+            'services.whatsapp.enabled' => true,
+            'services.whatsapp.kepala_phone' => '6282384355225',
+        ]);
+
+        $whatsappBaseUrl = rtrim((string) config('services.whatsapp.base_url', 'http://localhost:3000'), '/');
+
+        Http::fake([
+            $whatsappBaseUrl . '/send/message' => Http::response([
+                'code' => 'SUCCESS',
+                'message' => 'Success',
+            ], 200),
+        ]);
+
+        $this->actingAs($this->investigator1)
+            ->post(route('investigations.update-result', $this->investigation->id), [
+                'final_result' => 'Tidak ditemukan pelanggaran material.',
+                'recommendation' => 'Dilakukan pembinaan internal.',
+            ]);
+
+        $this->assertDatabaseHas('investigations', [
+            'id' => $this->investigation->id,
+            'status' => 'completed',
+        ]);
+
+        Http::assertSent(function ($request) use ($whatsappBaseUrl) {
+            $body = $request->data();
+
+            return $request->url() === $whatsappBaseUrl . '/send/message'
+                && $body['phone'] === '6282384355225'
+                && str_contains($body['message'], $this->laporan->nomor_registrasi)
+                && str_contains($body['message'], 'siap untuk ditindaklanjuti');
+        });
     }
 }
