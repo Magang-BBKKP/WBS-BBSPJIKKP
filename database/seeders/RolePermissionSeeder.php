@@ -120,7 +120,6 @@ class RolePermissionSeeder extends Seeder
         $kepala = Role::firstOrCreate(['name' => 'kepala-bbspjikkp']);
         $kepala->syncPermissions([
             'view-laporan',
-            'view-verifikasi',
             'view-investigasi',
             'approve-investigasi', // membentuk tim & menelaah
             'view-tindak-lanjut',

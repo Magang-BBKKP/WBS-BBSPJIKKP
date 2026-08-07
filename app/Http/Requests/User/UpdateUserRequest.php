@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Rules\UniquePhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest
@@ -28,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'phone_number' => ['nullable', 'string', 'max:20'],
+            'phone_number' => ['nullable', 'string', 'max:20', new UniquePhoneNumber($userId)],
             'unit_kerja' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
             'role' => ['required', 'string', 'in:super-admin,tim-wbs,investigator,kepala-bbspjikkp'],

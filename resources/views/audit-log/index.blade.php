@@ -61,7 +61,7 @@
                     @forelse($logs as $log)
                     <tr>
                         <td class="px-4 py-3 text-muted small" style="white-space:nowrap;">{{ $log->created_at->format('d M Y H:i') }}</td>
-                        <td class="py-3 small">{{ $log->user->name ?? '<em class="text-muted">System</em>' }}</td>
+                        <td class="py-3 small">{{ $log->user->name ?? '<em class="text-muted">Sistem</em>' }}</td>
                         <td class="py-3">
                             <span class="badge bg-primary-soft text-primary small fw-semibold">{{ $log->action }}</span>
                         </td>

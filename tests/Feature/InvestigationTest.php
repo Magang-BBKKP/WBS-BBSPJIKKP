@@ -7,9 +7,11 @@ use App\Models\Laporan;
 use App\Models\Kategori;
 use App\Models\Investigation;
 use App\Models\InvestigationTimeline;
+use App\Models\InvestigationTimelineEvidence;
 use App\Models\InvestigationDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -124,6 +126,68 @@ class InvestigationTest extends TestCase
     }
 
     /**
+     * Test investigator can add timeline with concrete evidence attachments.
+     */
+    public function test_investigator_can_add_timeline_with_evidence()
+    {
+        Storage::fake('local');
+
+        $file = UploadedFile::fake()->create('bukti_wawancara.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->investigator1)
+            ->post(route('investigations.store-timeline', $this->investigation->id), [
+                'description' => 'Melakukan wawancara terhadap saksi A.',
+                'date' => now()->format('Y-m-d H:i:s'),
+                'evidences' => [$file],
+            ]);
+
+        $response->assertRedirect(route('investigations.show', $this->investigation->id));
+        $this->assertDatabaseHas('investigation_timelines', [
+            'investigation_id' => $this->investigation->id,
+            'description' => 'Melakukan wawancara terhadap saksi A.',
+        ]);
+
+        $this->assertDatabaseHas('investigation_timeline_evidences', [
+            'file_name' => 'bukti_wawancara.pdf',
+        ]);
+
+        $evidence = InvestigationTimelineEvidence::first();
+        Storage::disk('local')->assertExists($evidence->file_path);
+
+        // Assigned investigator can download the evidence securely.
+        $download = $this->actingAs($this->investigator1)
+            ->get(route('investigations.download-timeline-evidence', [
+                'id' => $this->investigation->id,
+                'timelineId' => $evidence->investigation_timeline_id,
+                'evidenceId' => $evidence->id,
+            ]));
+
+        $download->assertOk();
+        $download->assertDownload('bukti_wawancara.pdf');
+    }
+
+    /**
+     * Test timeline can be added without evidence.
+     */
+    public function test_investigator_can_add_timeline_without_evidence()
+    {
+        Storage::fake('local');
+
+        $response = $this->actingAs($this->investigator1)
+            ->post(route('investigations.store-timeline', $this->investigation->id), [
+                'description' => 'Hanya catatan perkembangan tanpa bukti.',
+                'date' => now()->format('Y-m-d H:i:s'),
+            ]);
+
+        $response->assertRedirect(route('investigations.show', $this->investigation->id));
+        $this->assertDatabaseHas('investigation_timelines', [
+            'investigation_id' => $this->investigation->id,
+            'description' => 'Hanya catatan perkembangan tanpa bukti.',
+        ]);
+        $this->assertDatabaseCount('investigation_timeline_evidences', 0);
+    }
+
+    /**
      * Test investigator can securely upload supporting document.
      */
     public function test_investigator_can_upload_document()
@@ -167,5 +231,46 @@ class InvestigationTest extends TestCase
             'final_result' => 'Terbukti menerima suap sebesar Rp 50.000.000.',
             'recommendation' => 'Pemberhentian tidak dengan hormat.',
         ]);
+    }
+
+    /**
+     * Kepala Balai receives WhatsApp notification when investigation is
+     * completed and ready for follow-up.
+     */
+    public function test_completed_investigation_notifies_kepala_for_follow_up()
+    {
+        config([
+            'services.whatsapp.enabled' => true,
+            'services.whatsapp.kepala_phone' => '6282384355225',
+        ]);
+
+        $whatsappBaseUrl = rtrim((string) config('services.whatsapp.base_url', 'http://localhost:3000'), '/');
+
+        Http::fake([
+            $whatsappBaseUrl . '/send/message' => Http::response([
+                'code' => 'SUCCESS',
+                'message' => 'Success',
+            ], 200),
+        ]);
+
+        $this->actingAs($this->investigator1)
+            ->post(route('investigations.update-result', $this->investigation->id), [
+                'final_result' => 'Tidak ditemukan pelanggaran material.',
+                'recommendation' => 'Dilakukan pembinaan internal.',
+            ]);
+
+        $this->assertDatabaseHas('investigations', [
+            'id' => $this->investigation->id,
+            'status' => 'completed',
+        ]);
+
+        Http::assertSent(function ($request) use ($whatsappBaseUrl) {
+            $body = $request->data();
+
+            return $request->url() === $whatsappBaseUrl . '/send/message'
+                && $body['phone'] === '6282384355225'
+                && str_contains($body['message'], $this->laporan->nomor_registrasi)
+                && str_contains($body['message'], 'siap untuk ditindaklanjuti');
+        });
     }
 }

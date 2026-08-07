@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WBS BBSPJIKKP - Speak Up, Protect Integrity</title>
+    <title>WBS BBSPJIKKP - Bersuara, Lindungi Integritas</title>
     <link rel="icon" type="image/png" href="{{ asset('images/Logo Icon Only.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Logo Icon Only.png') }}">
     
@@ -77,7 +77,7 @@
                             @can('view-dashboard')
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-muted" href="{{ route('dashboard') }}">
-                                        <i class="bi bi-grid-fill text-primary"></i> Dashboard
+                                        <i class="bi bi-grid-fill text-primary"></i> Dasbor
                                     </a>
                                 </li>
                             @endcan
@@ -98,7 +98,7 @@
                         </ul>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-primary btn-sm px-4 rounded-pill fw-medium ms-2">Login</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary btn-sm px-4 rounded-pill fw-medium ms-2">Masuk</a>
                 @endauth
             </div>
         </div>

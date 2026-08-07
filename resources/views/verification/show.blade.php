@@ -40,7 +40,7 @@
                     </ul>
                 </div>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
     @endif
 
@@ -264,7 +264,7 @@
         <div class="modal-content border-0 rounded-4 shadow">
             <div class="modal-header border-0 bg-success text-white py-3 rounded-top-4">
                 <h5 class="modal-title fw-bold" id="modalValidateLabel"><i class="bi bi-check-circle-fill me-2"></i>Validasi Laporan</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <form action="{{ route('verifikasi.validate', $laporan->id) }}" method="POST">
                 @csrf
@@ -293,7 +293,7 @@
         <div class="modal-content border-0 rounded-4 shadow">
             <div class="modal-header border-0 bg-warning text-dark py-3 rounded-top-4">
                 <h5 class="modal-title fw-bold" id="modalClarifyLabel"><i class="bi bi-chat-dots-fill me-2"></i>Minta Klarifikasi Pelapor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <form action="{{ route('verifikasi.clarify', $laporan->id) }}" method="POST">
                 @csrf
@@ -322,7 +322,7 @@
         <div class="modal-content border-0 rounded-4 shadow">
             <div class="modal-header border-0 bg-danger text-white py-3 rounded-top-4">
                 <h5 class="modal-title fw-bold" id="modalRejectLabel"><i class="bi bi-x-circle-fill me-2"></i>Tolak Laporan</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <form action="{{ route('verifikasi.reject', $laporan->id) }}" method="POST">
                 @csrf

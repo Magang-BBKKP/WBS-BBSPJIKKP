@@ -24,6 +24,8 @@ class StoreTimelineRequest extends FormRequest
         return [
             'description' => ['required', 'string', 'max:2000'],
             'date'        => ['required', 'date', 'before_or_equal:now'],
+            'evidences'   => ['nullable', 'array', 'max:10'],
+            'evidences.*' => ['file', 'mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,zip', 'max:10240'],
         ];
     }
 
@@ -40,6 +42,11 @@ class StoreTimelineRequest extends FormRequest
             'date.required'        => 'Tanggal kejadian/perkembangan wajib diisi.',
             'date.date'            => 'Format tanggal tidak valid.',
             'date.before_or_equal' => 'Tanggal perkembangan tidak boleh melebihi waktu sekarang.',
+            'evidences.array'      => 'Format bukti pendukung tidak valid.',
+            'evidences.max'        => 'Maksimal 10 file bukti per perkembangan.',
+            'evidences.*.file'     => 'File bukti tidak valid.',
+            'evidences.*.mimes'    => 'Bukti hanya boleh berupa file dengan tipe: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, ZIP.',
+            'evidences.*.max'      => 'Ukuran file bukti tidak boleh melebihi 10 MB per file.',
         ];
     }
 }

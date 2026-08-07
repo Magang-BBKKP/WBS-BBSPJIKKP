@@ -226,7 +226,7 @@
                     {{ session('status') === 'profile-updated' ? 'Perubahan informasi profil Anda telah berhasil disimpan.' : 'Password akun Anda telah berhasil diperbarui.' }}
                 </span>
             </div>
-            <button type="button" class="btn-close ms-auto shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close ms-auto shadow-none" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
     @endif
 
