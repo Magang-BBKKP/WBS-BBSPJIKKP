@@ -231,7 +231,13 @@ class MasterDataController extends Controller
                 'url' => route('master-data.items.index', $type),
                 'active' => $active === $type,
             ]];
-        })->all());
+        })->all(), [
+            'faq' => [
+                'title' => 'FAQ',
+                'url' => route('master-data.faq.index'),
+                'active' => $active === 'faq',
+            ],
+        ]);
     }
 
     private function log(Request $request, string $action, string $description): void

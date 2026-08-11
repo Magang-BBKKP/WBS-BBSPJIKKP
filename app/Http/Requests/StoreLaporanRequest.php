@@ -29,9 +29,9 @@ class StoreLaporanRequest extends FormRequest
             'deskripsi'        => [$active('deskripsi') ? $required('deskripsi') : 'nullable', 'string', 'min:50'],
             'tanggal_kejadian' => [$active('tanggal_kejadian') ? $required('tanggal_kejadian') : 'nullable', 'date', 'before_or_equal:today'],
             'lokasi'           => [$active('lokasi') ? $required('lokasi') : 'nullable', 'string', 'max:255'],
-            'nama_terlapor'    => [$active('nama_terlapor') ? $required('nama_terlapor') : 'nullable', 'string', 'max:255'],
-            'jabatan_terlapor' => [$active('jabatan_terlapor') ? $required('jabatan_terlapor') : 'nullable', 'string', 'max:255'],
-            'unit_terlapor'    => [$active('unit_terlapor') ? $required('unit_terlapor') : 'nullable', 'string', 'max:255'],
+            'nama_terlapor'    => ['required', 'string', 'max:255'],
+            'jabatan_terlapor' => ['required', 'string', 'max:255'],
+            'unit_terlapor'    => ['required', 'string', 'max:255'],
 
             // Pilihan anonim
             'is_anonim'        => ['nullable', 'boolean'],
@@ -40,7 +40,8 @@ class StoreLaporanRequest extends FormRequest
             'telepon_pelapor'  => [$active('telepon_pelapor') ? $required('telepon_pelapor') : 'nullable', 'string', 'max:20'],
 
             // Step 3: Bukti
-            'custom_fields'    => ['nullable', 'array'],
+            'custom_fields'           => ['nullable', 'array'],
+            'sumber_informasi_kustom' => ['nullable', 'required_if:custom_fields.sumber_informasi,Lainnya', 'string', 'max:255'],
             'bukti'            => [$active('bukti') ? $required('bukti') : 'nullable', 'array', 'max:10'],
             'bukti.*'          => [
                 'file',
@@ -106,6 +107,12 @@ class StoreLaporanRequest extends FormRequest
             'deskripsi.required'       => 'Deskripsi kejadian wajib diisi.',
             'deskripsi.min'            => 'Deskripsi harus minimal 50 karakter.',
             'tanggal_kejadian.before_or_equal' => 'Tanggal kejadian tidak boleh di masa depan.',
+            'nama_terlapor.required'   => 'Nama terlapor wajib diisi.',
+            'nama_terlapor.max'        => 'Nama terlapor maksimal 255 karakter.',
+            'jabatan_terlapor.required'=> 'Jabatan terlapor wajib diisi.',
+            'jabatan_terlapor.max'     => 'Jabatan terlapor maksimal 255 karakter.',
+            'unit_terlapor.required'   => 'Unit / Bagian terlapor wajib diisi.',
+            'unit_terlapor.max'        => 'Unit / Bagian terlapor maksimal 255 karakter.',
             'nama_pelapor.required'    => 'Nama pelapor wajib diisi jika tidak anonim.',
             'email_pelapor.required'   => 'Email pelapor wajib diisi jika tidak anonim.',
             'email_pelapor.email'      => 'Format email tidak valid.',

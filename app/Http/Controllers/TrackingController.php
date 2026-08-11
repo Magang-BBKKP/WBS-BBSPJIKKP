@@ -28,32 +28,32 @@ class TrackingController extends Controller
         ]);
 
         $code = trim($request->access_code);
-        $laporan = Laporan::where('tracking_token', $code)
-            ->orWhere('nomor_registrasi', $code)
+        $laporan = Laporan::where('nomor_registrasi', $code)
+            ->orWhere('tracking_token', $code)
             ->first();
 
         if (!$laporan) {
             return redirect()->back()->with('error', 'Laporan tidak ditemukan dengan kode akses tersebut.');
         }
 
-        return redirect()->route('track.show', ['token' => $laporan->tracking_token]);
+        return redirect()->route('track.show', ['nomor_registrasi' => $laporan->nomor_registrasi]);
     }
 
     /**
      * Show the tracking details page.
      */
-    public function show($token)
+    public function show($nomor_registrasi)
     {
-        $laporan = Laporan::with(['timelines', 'messages.user', 'buktis'])->where('tracking_token', $token)->firstOrFail();
+        $laporan = Laporan::with(['timelines', 'messages.user', 'buktis'])->where('nomor_registrasi', $nomor_registrasi)->firstOrFail();
         return view('tracking.show', compact('laporan'));
     }
 
     /**
      * Upload additional evidence.
      */
-    public function storeEvidence(Request $request, $token)
+    public function storeEvidence(Request $request, $nomor_registrasi)
     {
-        $laporan = Laporan::where('tracking_token', $token)->firstOrFail();
+        $laporan = Laporan::where('nomor_registrasi', $nomor_registrasi)->firstOrFail();
 
         $request->validate([
             'file' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240', // 10MB max
@@ -72,15 +72,15 @@ class TrackingController extends Controller
             'ukuran'     => $file->getSize(),
         ]);
 
-        return redirect()->route('track.show', ['token' => $token])->with('success', 'Bukti berhasil ditambahkan.');
+        return redirect()->route('track.show', ['nomor_registrasi' => $nomor_registrasi])->with('success', 'Bukti berhasil ditambahkan.');
     }
 
     /**
      * Fetch messages (Ajax).
      */
-    public function fetchMessages($token)
+    public function fetchMessages($nomor_registrasi)
     {
-        $laporan = Laporan::with('messages.user')->where('tracking_token', $token)->firstOrFail();
+        $laporan = Laporan::with('messages.user')->where('nomor_registrasi', $nomor_registrasi)->firstOrFail();
         return response()->json([
             'messages' => $laporan->messages->map(function ($msg) {
                 return [
@@ -96,9 +96,9 @@ class TrackingController extends Controller
     /**
      * Store a new message in the secure channel.
      */
-    public function storeMessage(Request $request, $token)
+    public function storeMessage(Request $request, $nomor_registrasi)
     {
-        $laporan = Laporan::where('tracking_token', $token)->firstOrFail();
+        $laporan = Laporan::where('nomor_registrasi', $nomor_registrasi)->firstOrFail();
 
         $request->validate([
             'message' => 'required|string|max:2000',
@@ -140,6 +140,6 @@ class TrackingController extends Controller
             ]);
         }
 
-        return redirect()->route('track.show', ['token' => $token])->with('success', 'Pesan berhasil dikirim.');
+        return redirect()->route('track.show', ['nomor_registrasi' => $nomor_registrasi])->with('success', 'Pesan berhasil dikirim.');
     }
 }

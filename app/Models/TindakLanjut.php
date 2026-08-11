@@ -16,6 +16,7 @@ class TindakLanjut extends Model
         'investigation_id',
         'jenis_tindakan',
         'keterangan',
+        'dokumen',
         'ditetapkan_oleh',
         'ditetapkan_pada',
     ];
@@ -31,6 +32,7 @@ class TindakLanjut extends Model
         'pemutusan_kontrak'  => 'Pemutusan Kontrak',
         'pelaporan_aph'      => 'Pelaporan ke APH',
         'perbaikan_sistem'   => 'Perbaikan Sistem',
+        'lainnya'            => 'Lainnya',
     ];
 
     const JENIS_COLOR = [

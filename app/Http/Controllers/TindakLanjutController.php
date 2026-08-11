@@ -66,8 +66,10 @@ class TindakLanjutController extends Controller
         Gate::authorize('create-tindak-lanjut');
 
         $request->validate([
-            'jenis_tindakan' => 'required|in:' . implode(',', array_keys(TindakLanjut::JENIS)),
-            'keterangan'     => 'nullable|string|max:2000',
+            'jenis_tindakan'        => 'required|in:' . implode(',', array_keys(TindakLanjut::JENIS)),
+            'jenis_tindakan_kustom' => 'nullable|required_if:jenis_tindakan,lainnya|string|max:255',
+            'keterangan'            => 'nullable|string|max:2000',
+            'dokumen_tindakan'      => 'nullable|file|mimes:pdf,docx|max:5120',
         ]);
 
         $investigation = Investigation::findOrFail($id);
@@ -76,15 +78,28 @@ class TindakLanjutController extends Controller
             return back()->with('error', 'Tindak lanjut untuk investigasi ini sudah ditetapkan.');
         }
 
-        DB::transaction(function () use ($investigation, $request) {
+        $dokumenPath = null;
+        if ($request->hasFile('dokumen_tindakan')) {
+            $file = $request->file('dokumen_tindakan');
+            $fileName = 'tindak_lanjut_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $dokumenPath = $file->storeAs('tindak_lanjuts', $fileName, 'local');
+        }
+
+        DB::transaction(function () use ($investigation, $request, $dokumenPath) {
             $laporan = $investigation->laporan;
+
+            $jenis = $request->jenis_tindakan;
+            if ($jenis === 'lainnya') {
+                $jenis = $request->jenis_tindakan_kustom;
+            }
 
             // Simpan tindak lanjut
             TindakLanjut::create([
                 'laporan_id'      => $laporan->id,
                 'investigation_id'=> $investigation->id,
-                'jenis_tindakan'  => $request->jenis_tindakan,
+                'jenis_tindakan'  => $jenis,
                 'keterangan'      => $request->keterangan,
+                'dokumen'         => $dokumenPath,
                 'ditetapkan_oleh' => auth()->id(),
                 'ditetapkan_pada' => now(),
             ]);
@@ -93,7 +108,7 @@ class TindakLanjutController extends Controller
             $laporan->update(['status' => Laporan::STATUS_SELESAI]);
 
             // Timeline
-            $jenisLabel = TindakLanjut::JENIS[$request->jenis_tindakan] ?? $request->jenis_tindakan;
+            $jenisLabel = TindakLanjut::JENIS[$jenis] ?? $jenis;
             LaporanTimeline::create([
                 'laporan_id'  => $laporan->id,
                 'status'      => Laporan::STATUS_SELESAI,
@@ -113,5 +128,24 @@ class TindakLanjutController extends Controller
 
         return redirect()->route('tindak-lanjut.index')
             ->with('success', 'Tindak lanjut berhasil ditetapkan. Laporan dinyatakan selesai.');
+    }
+
+    /**
+     * Download the action document securely.
+     */
+    public function downloadDocument($id)
+    {
+        Gate::authorize('view-tindak-lanjut');
+
+        $tindakLanjut = TindakLanjut::where('investigation_id', $id)->firstOrFail();
+
+        $filePath = $tindakLanjut->dokumen;
+
+        if (!$filePath || !\Illuminate\Support\Facades\Storage::disk('local')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        $fileName = basename($filePath);
+        return \Illuminate\Support\Facades\Storage::disk('local')->download($filePath, $fileName);
     }
 }

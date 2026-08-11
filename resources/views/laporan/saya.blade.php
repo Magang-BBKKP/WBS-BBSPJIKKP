@@ -52,7 +52,7 @@
                             </span>
                         </td>
                         <td class="py-3">
-                            <a href="{{ route('track.show', $laporan->tracking_token) }}" class="btn btn-sm btn-outline-primary rounded-3" target="_blank">
+                            <a href="{{ route('track.show', $laporan->nomor_registrasi) }}" class="btn btn-sm btn-outline-primary rounded-3" target="_blank">
                                 <i class="bi bi-search me-1"></i>Lacak
                             </a>
                         </td>

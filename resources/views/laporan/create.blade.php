@@ -171,12 +171,18 @@
                                     @if($field->type === 'textarea')
                                         <textarea name="{{ $fieldName }}" rows="4" class="form-control @if($fieldError) is-invalid @endif" placeholder="{{ $field->placeholder }}">{{ $oldValue }}</textarea>
                                     @elseif($field->type === 'select')
-                                        <select name="{{ $fieldName }}" class="form-select @if($fieldError) is-invalid @endif">
+                                        <select name="{{ $fieldName }}" id="field_{{ $field->name }}" class="form-select @if($fieldError) is-invalid @endif">
                                             <option value="">Pilih {{ strtolower($field->label) }}</option>
                                             @foreach($field->options ?? [] as $option)
                                                 <option value="{{ $option }}" {{ $oldValue === $option ? 'selected' : '' }}>{{ $option }}</option>
                                             @endforeach
                                         </select>
+                                        @if($field->name === 'sumber_informasi')
+                                        <div class="mt-2 d-none" id="sumber_informasi_kustom_wrapper">
+                                            <input type="text" name="sumber_informasi_kustom" id="sumber_informasi_kustom" class="form-control @error('sumber_informasi_kustom') is-invalid @enderror" placeholder="Tuliskan sumber informasi lainnya..." value="{{ old('sumber_informasi_kustom') }}">
+                                            @error('sumber_informasi_kustom')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                        </div>
+                                        @endif
                                     @elseif($field->type === 'radio')
                                         <div class="@if($fieldError) is-invalid @endif">
                                             @foreach($field->options ?? [] as $option)
@@ -215,7 +221,7 @@
                             <div class="col-12 mt-2">
                                 <div class="d-flex align-items-center gap-2 mb-1">
                                     <span class="fw-semibold text-dark" style="font-size:.9rem;">Data Terlapor</span>
-                                    <small class="text-muted">(opsional)</small>
+                                    <small class="text-danger">(wajib)</small>
                                 </div>
                                 <hr class="mt-1 mb-3">
                             </div>
@@ -358,7 +364,11 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="mt-4 text-center">
+                            <p class="text-muted small">Dengan mengisi formulir ini, Anda menyetujui untuk bersedia dihubungi lebih lanjut jika diperlukan.</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
                             <button type="button" class="btn-laporan-secondary" onclick="goToStep(2)">
                                 <i class="bi bi-arrow-left"></i> Kembali
                             </button>
@@ -593,11 +603,33 @@ function getFileIcon(name) {
     return map[ext] || 'bi-file-earmark text-muted';
 }
 
+// Toggle custom source of information
+document.addEventListener('DOMContentLoaded', function () {
+    const selectEl = document.getElementById('field_sumber_informasi');
+    const wrapperEl = document.getElementById('sumber_informasi_kustom_wrapper');
+    const inputEl = document.getElementById('sumber_informasi_kustom');
+
+    if (selectEl && wrapperEl && inputEl) {
+        function toggleSumbInfo() {
+            if (selectEl.value === 'Lainnya') {
+                wrapperEl.classList.remove('d-none');
+                inputEl.setAttribute('required', 'required');
+            } else {
+                wrapperEl.classList.add('d-none');
+                inputEl.removeAttribute('required');
+                inputEl.value = '';
+            }
+        }
+        selectEl.addEventListener('change', toggleSumbInfo);
+        toggleSumbInfo();
+    }
+});
+
 // ── Submit Handler ─────────────────────────────────────────
 document.getElementById('laporanForm').addEventListener('submit', function () {
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Mengirim...';
+    btn.innerText = 'Loading...';
 });
 
 // ── Auto-goto step on validation error ────────────────────
@@ -605,7 +637,7 @@ document.getElementById('laporanForm').addEventListener('submit', function () {
     goToStep(1);
 @elseif($errors->hasAny(['judul','deskripsi','tanggal_kejadian','nama_pelapor','email_pelapor']))
     goToStep(2);
-@elseif($errors->has('custom_fields') || collect($errors->getMessages())->keys()->contains(fn ($key) => str_starts_with($key, 'custom_fields.')))
+@elseif($errors->has('custom_fields') || $errors->has('sumber_informasi_kustom') || collect($errors->getMessages())->keys()->contains(fn ($key) => str_starts_with($key, 'custom_fields.')))
     goToStep(2);
 @elseif($errors->has('bukti') || $errors->has('bukti.*'))
     goToStep(3);

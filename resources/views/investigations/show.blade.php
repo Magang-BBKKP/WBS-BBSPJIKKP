@@ -358,29 +358,59 @@
 
                     <div class="mb-3">
                         <label class="text-muted small fw-semibold d-block mb-1">Hasil Temuan Investigasi</label>
-                        <div class="p-3 bg-light rounded-3 text-dark text-break small" style="white-space: pre-line; line-height: 1.5;">
+                        <div class="p-3 bg-light rounded-3 text-dark text-break small mb-2" style="white-space: pre-line; line-height: 1.5;">
                             {{ $investigation->final_result }}
                         </div>
+                        @if($investigation->dokumen_hasil_akhir)
+                            <div class="mt-2">
+                                <a href="{{ route('investigations.download-document-field', ['id' => $investigation->id, 'field' => 'dokumen_hasil_akhir']) }}" class="btn btn-sm btn-outline-primary rounded-3">
+                                    <i class="bi bi-file-earmark-arrow-down me-1"></i> Unduh Dokumen Hasil Akhir
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mb-0">
                         <label class="text-muted small fw-semibold d-block mb-1">Rekomendasi Tindak Lanjut</label>
-                        <div class="p-3 bg-light rounded-3 text-dark text-break small" style="white-space: pre-line; line-height: 1.5;">
+                        <div class="p-3 bg-light rounded-3 text-dark text-break small mb-2" style="white-space: pre-line; line-height: 1.5;">
                             {{ $investigation->recommendation }}
                         </div>
+                        @if($investigation->dokumen_rekomendasi)
+                            <div class="mt-2">
+                                <a href="{{ route('investigations.download-document-field', ['id' => $investigation->id, 'field' => 'dokumen_rekomendasi']) }}" class="btn btn-sm btn-outline-primary rounded-3">
+                                    <i class="bi bi-file-earmark-arrow-down me-1"></i> Unduh Dokumen Rekomendasi
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 @else
                     <!-- Active form to submit final results -->
-                    <form action="{{ route('investigations.update-result', $investigation->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan investigasi ini? Tindakan ini bersifat final dan tidak dapat diubah.');">
+                    <form action="{{ route('investigations.update-result', $investigation->id) }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan investigasi ini? Tindakan ini bersifat final dan tidak dapat diubah.');">
                         @csrf
                         <div class="mb-3">
-                            <label for="final_result" class="form-label small fw-semibold text-muted mb-1">Hasil Temuan Akhir</label>
-                            <textarea name="final_result" id="final_result" class="form-control rounded-3" rows="4" placeholder="Uraikan temuan objektif, bukti material yang diperoleh, dan fakta yang terbukti..." required>{{ old('final_result') }}</textarea>
+                            <label for="final_result" class="form-label small fw-semibold text-muted mb-1">Hasil Temuan Akhir <span class="text-danger">*</span></label>
+                            <textarea name="final_result" id="final_result" class="form-control rounded-3 @error('final_result') is-invalid @enderror" rows="4" placeholder="Uraikan temuan objektif, bukti material yang diperoleh, dan fakta yang terbukti..." required>{{ old('final_result') }}</textarea>
+                            @error('final_result')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dokumen_hasil_akhir" class="form-label small fw-semibold text-muted mb-1">Dokumen Hasil Akhir (Opsional)</label>
+                            <input type="file" name="dokumen_hasil_akhir" id="dokumen_hasil_akhir" class="form-control rounded-3 @error('dokumen_hasil_akhir') is-invalid @enderror" accept=".pdf,.docx">
+                            <div class="form-text text-muted" style="font-size: 0.75rem;">Format: PDF, DOCX (Maks. 5 MB)</div>
+                            @error('dokumen_hasil_akhir')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="recommendation" class="form-label small fw-semibold text-muted mb-1">Rekomendasi Tindakan <span class="text-danger">*</span></label>
+                            <textarea name="recommendation" id="recommendation" class="form-control rounded-3 @error('recommendation') is-invalid @enderror" rows="3" placeholder="Uraikan rekomendasi hukuman disiplin, teguran, pembinaan, atau perbaikan tata kelola..." required>{{ old('recommendation') }}</textarea>
+                            @error('recommendation')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="mb-4">
-                            <label for="recommendation" class="form-label small fw-semibold text-muted mb-1">Rekomendasi Tindakan</label>
-                            <textarea name="recommendation" id="recommendation" class="form-control rounded-3" rows="3" placeholder="Uraikan rekomendasi hukuman disiplin, teguran, pembinaan, atau perbaikan tata kelola..." required>{{ old('recommendation') }}</textarea>
+                            <label for="dokumen_rekomendasi" class="form-label small fw-semibold text-muted mb-1">Dokumen Rekomendasi (Opsional)</label>
+                            <input type="file" name="dokumen_rekomendasi" id="dokumen_rekomendasi" class="form-control rounded-3 @error('dokumen_rekomendasi') is-invalid @enderror" accept=".pdf,.docx">
+                            <div class="form-text text-muted" style="font-size: 0.75rem;">Format: PDF, DOCX (Maks. 5 MB)</div>
+                            @error('dokumen_rekomendasi')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="d-grid">

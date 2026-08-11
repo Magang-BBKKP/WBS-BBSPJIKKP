@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
         // 3. Seed Master Data tambahan sesuai PRD
         $this->call(MasterDataItemSeeder::class);
 
+        // 3b. Seed Report Form Fields
+        $this->call(ReportFormFieldSeeder::class);
+
         // 4. Buat Super Admin default
         $superAdmin = User::firstOrCreate(
             ['email' => 'admin@bbspjikkp.go.id'],
@@ -72,5 +75,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $kepala->assignRole('kepala-bbspjikkp');
+
+        // 8. Seed FAQs
+        $this->call(FaqSeeder::class);
     }
 }
