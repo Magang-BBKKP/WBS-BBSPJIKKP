@@ -21,6 +21,7 @@ class LaporanTest extends TestCase
 
         // Seed roles & permissions
         $this->artisan('db:seed', ['--class' => 'RolePermissionSeeder']);
+        $this->artisan('db:seed', ['--class' => 'ReportFormFieldSeeder']);
 
         // Create a normal user
         $this->user = User::factory()->create([

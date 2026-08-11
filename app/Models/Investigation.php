@@ -17,6 +17,8 @@ class Investigation extends Model
         'status',
         'final_result',
         'recommendation',
+        'dokumen_hasil_akhir',
+        'dokumen_rekomendasi',
     ];
 
     protected $casts = [

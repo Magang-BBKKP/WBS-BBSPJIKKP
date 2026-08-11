@@ -14,10 +14,10 @@ Route::get('/', [LandingPageController::class, 'index'])->name('home');
 // Tracking Routes
 Route::get('/track', [TrackingController::class, 'index'])->name('track.index');
 Route::post('/track', [TrackingController::class, 'search'])->name('track.search');
-Route::get('/track/{token}', [TrackingController::class, 'show'])->name('track.show');
-Route::post('/track/{token}/evidence', [TrackingController::class, 'storeEvidence'])->name('track.evidence.store');
-Route::get('/track/{token}/messages', [TrackingController::class, 'fetchMessages'])->name('track.messages.fetch');
-Route::post('/track/{token}/messages', [TrackingController::class, 'storeMessage'])->name('track.message.store');
+Route::get('/track/{nomor_registrasi}', [TrackingController::class, 'show'])->name('track.show');
+Route::post('/track/{nomor_registrasi}/evidence', [TrackingController::class, 'storeEvidence'])->name('track.evidence.store');
+Route::get('/track/{nomor_registrasi}/messages', [TrackingController::class, 'fetchMessages'])->name('track.messages.fetch');
+Route::post('/track/{nomor_registrasi}/messages', [TrackingController::class, 'storeMessage'])->name('track.message.store');
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('investigations/{id}/timeline', [\App\Http\Controllers\InvestigationController::class, 'storeTimeline'])->name('investigations.store-timeline');
     Route::post('investigations/{id}/document', [\App\Http\Controllers\InvestigationController::class, 'storeDocument'])->name('investigations.store-document');
     Route::get('investigations/{id}/document/{docId}/download', [\App\Http\Controllers\InvestigationController::class, 'downloadDocument'])->name('investigations.download-document');
+    Route::get('investigations/{id}/download-field/{field}', [\App\Http\Controllers\InvestigationController::class, 'downloadDocumentField'])->name('investigations.download-document-field');
     Route::post('investigations/{id}/result', [\App\Http\Controllers\InvestigationController::class, 'updateResult'])->name('investigations.update-result');
 
     // Kepala BBSPJIKKP — Pembentukan Tim Investigasi
@@ -88,10 +89,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [\App\Http\Controllers\TindakLanjutController::class, 'index'])->name('index');
         Route::get('/{id}', [\App\Http\Controllers\TindakLanjutController::class, 'show'])->name('show');
         Route::post('/{id}', [\App\Http\Controllers\TindakLanjutController::class, 'store'])->name('store');
+        Route::get('/{id}/download-document', [\App\Http\Controllers\TindakLanjutController::class, 'downloadDocument'])->name('download-document');
     });
 
     // Monitoring
     Route::get('/monitoring', [\App\Http\Controllers\MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('/monitoring/export', [\App\Http\Controllers\MonitoringController::class, 'export'])->name('monitoring.export');
 
     // Master Data (Super Admin)
     Route::prefix('master-data')->name('master-data.')->group(function () {
@@ -99,6 +102,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/kategori', [\App\Http\Controllers\MasterDataController::class, 'store'])->name('store');
         Route::put('/kategori/{kategori}', [\App\Http\Controllers\MasterDataController::class, 'update'])->name('update');
         Route::delete('/kategori/{kategori}', [\App\Http\Controllers\MasterDataController::class, 'destroy'])->name('destroy');
+        Route::get('/faq', [\App\Http\Controllers\FaqController::class, 'index'])->name('faq.index');
+        Route::post('/faq', [\App\Http\Controllers\FaqController::class, 'store'])->name('faq.store');
+        Route::put('/faq/{faq}', [\App\Http\Controllers\FaqController::class, 'update'])->name('faq.update');
+        Route::delete('/faq/{faq}', [\App\Http\Controllers\FaqController::class, 'destroy'])->name('faq.destroy');
+
         Route::get('/{type}', [\App\Http\Controllers\MasterDataController::class, 'items'])->name('items.index');
         Route::post('/{type}', [\App\Http\Controllers\MasterDataController::class, 'storeItem'])->name('items.store');
         Route::put('/{type}/{item}', [\App\Http\Controllers\MasterDataController::class, 'updateItem'])->name('items.update');

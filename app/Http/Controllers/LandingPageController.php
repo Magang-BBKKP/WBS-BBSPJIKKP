@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laporan;
+use App\Models\Faq;
 
 class LandingPageController extends Controller
 {
@@ -33,6 +34,8 @@ class LandingPageController extends Controller
             })
             ->values();
 
-        return view('landing.index', compact('reportStats', 'totalReports'));
+        $faqs = Faq::active()->get();
+
+        return view('landing.index', compact('reportStats', 'totalReports', 'faqs'));
     }
 }

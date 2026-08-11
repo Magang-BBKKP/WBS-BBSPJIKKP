@@ -149,12 +149,28 @@ class InvestigationService extends BaseService
                 ]);
             }
 
-            // Update status, result, and recommendation
-            $investigation->update([
-                'status' => Investigation::STATUS_COMPLETED,
-                'final_result' => $data['final_result'],
+            $updateData = [
+                'status'         => Investigation::STATUS_COMPLETED,
+                'final_result'   => $data['final_result'],
                 'recommendation' => $data['recommendation'],
-            ]);
+            ];
+
+            if (isset($data['dokumen_hasil_akhir']) && $data['dokumen_hasil_akhir'] instanceof UploadedFile) {
+                $file = $data['dokumen_hasil_akhir'];
+                $fileName = 'hasil_akhir_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('investigations/' . $investigation->id, $fileName, 'local');
+                $updateData['dokumen_hasil_akhir'] = $path;
+            }
+
+            if (isset($data['dokumen_rekomendasi']) && $data['dokumen_rekomendasi'] instanceof UploadedFile) {
+                $file = $data['dokumen_rekomendasi'];
+                $fileName = 'rekomendasi_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('investigations/' . $investigation->id, $fileName, 'local');
+                $updateData['dokumen_rekomendasi'] = $path;
+            }
+
+            // Update status, result, and recommendation
+            $investigation->update($updateData);
 
             // Add final timeline entry for Investigation
             InvestigationTimeline::create([

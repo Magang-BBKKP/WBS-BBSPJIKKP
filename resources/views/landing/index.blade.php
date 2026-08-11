@@ -228,44 +228,22 @@
             <div class="col-lg-8">
                 <div class="accordion accordion-flush custom-accordion" id="faqAccordion">
                     
+                    @forelse($faqs as $faq)
                     <div class="accordion-item bg-white border rounded-3 mb-3 px-3 py-2 shadow-sm">
                         <h2 class="accordion-header">
-                            <button class="accordion-button fw-bold text-dark bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true">
-                                Apakah identitas saya benar-benar dirahasiakan?
+                            <button class="accordion-button @if(!$loop->first) collapsed @endif fw-bold text-dark bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ $faq->id }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}">
+                                {{ $faq->question }}
                             </button>
                         </h2>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div id="faq{{ $faq->id }}" class="accordion-collapse collapse @if($loop->first) show @endif" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted small pt-0 pb-3 lh-lg">
-                                Ya. Kami menyediakan opsi Pelaporan Anonim di mana Anda tidak perlu mengisi data diri Anda. Namun disarankan agar Anda memberikan kontak (email/no HP) untuk keperluan permintaan klarifikasi oleh Tim WBS tanpa mengungkap identitas Anda ke publik.
+                                {!! nl2br(e($faq->answer)) !!}
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="accordion-item bg-white border rounded-3 mb-3 px-3 py-2 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-bold text-dark bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                Berapa lama laporan saya akan diproses?
-                            </button>
-                        </h2>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted small pt-0 pb-3 lh-lg">
-                                Laporan Anda akan segera diverifikasi oleh Tim WBS. Jika dinyatakan valid, Kepala BBSPJIKKP akan membentuk Tim Investigasi. Durasi proses tergantung pada kompleksitas pelanggaran dan bukti yang dilampirkan. Anda dapat terus memantau statusnya di halaman Track.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="accordion-item bg-white border rounded-3 mb-3 px-3 py-2 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-bold text-dark bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                Bukti seperti apa yang harus saya unggah?
-                            </button>
-                        </h2>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted small pt-0 pb-3 lh-lg">
-                                Anda dapat mengunggah dokumen (PDF, Word, Excel), Foto, maupun Video/Audio yang memperkuat laporan Anda. Sistem mendukung pengunggahan banyak file dengan ukuran maksimal tertentu yang telah ditentukan.
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                    <div class="text-center text-muted small py-4">Belum ada FAQ yang tersedia.</div>
+                    @endforelse
 
                 </div>
             </div>

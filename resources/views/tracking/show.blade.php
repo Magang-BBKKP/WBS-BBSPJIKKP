@@ -361,7 +361,7 @@
                 </div>
                 
                 <div class="p-3 border-top bg-white">
-                    <form action="{{ route('track.message.store', $laporan->tracking_token) }}" method="POST" id="chatForm">
+                    <form action="{{ route('track.message.store', $laporan->nomor_registrasi) }}" method="POST" id="chatForm">
                         @csrf
                         <div class="chat-input-wrapper">
                             <input type="text" name="message" id="messageInput" class="chat-input" placeholder="Type a secure message..." required autocomplete="off">
@@ -456,7 +456,7 @@
         <h5 class="modal-title fw-bold">Add Evidence</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ route('track.evidence.store', $laporan->tracking_token) }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('track.evidence.store', $laporan->nomor_registrasi) }}" method="POST" enctype="multipart/form-data">
           @csrf
           <div class="modal-body">
             <div class="mb-3">
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatContainer = document.querySelector('.chat-container');
     const chatForm = document.getElementById('chatForm');
     const messageInput = document.getElementById('messageInput');
-    const fetchUrl = '{{ route('track.messages.fetch', $laporan->tracking_token) }}';
+    const fetchUrl = '{{ route('track.messages.fetch', $laporan->nomor_registrasi) }}';
     
     // Auto-scroll to bottom
     function scrollToBottom() {

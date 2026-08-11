@@ -150,4 +150,28 @@ class InvestigationController extends Controller
         return redirect()->route('investigations.show', $id)
             ->with('success', 'Hasil investigasi akhir dan rekomendasi berhasil disimpan dan diserahkan.');
     }
+
+    /**
+     * Securely download a specific document field.
+     * Route: GET /investigations/{id}/download-field/{field}
+     */
+    public function downloadDocumentField($id, $field)
+    {
+        $investigation = Investigation::findOrFail($id);
+
+        Gate::authorize('view', $investigation);
+
+        if (!in_array($field, ['dokumen_hasil_akhir', 'dokumen_rekomendasi'])) {
+            abort(404);
+        }
+
+        $filePath = $investigation->{$field};
+
+        if (!$filePath || !Storage::disk('local')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan di server.');
+        }
+
+        $fileName = basename($filePath);
+        return Storage::disk('local')->download($filePath, $fileName);
+    }
 }

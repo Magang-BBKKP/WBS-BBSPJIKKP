@@ -72,9 +72,27 @@
                     <p class="text-muted small fst-italic">Hasil investigasi belum diisi.</p>
                 @endif
 
+                @if($investigation->dokumen_hasil_akhir)
+                    <div class="mt-2 mb-3">
+                        <span class="text-muted small d-block">Dokumen Hasil Akhir</span>
+                        <a href="{{ route('investigations.download-document-field', ['id' => $investigation->id, 'field' => 'dokumen_hasil_akhir']) }}" class="btn btn-sm btn-outline-primary rounded-3 mt-1">
+                            <i class="bi bi-file-earmark-arrow-down me-1"></i> Unduh Dokumen Hasil Akhir
+                        </a>
+                    </div>
+                @endif
+
                 @if($investigation->recommendation)
                     <h6 class="fw-semibold small mt-3 mb-2">Rekomendasi</h6>
                     <p class="small text-dark mb-0">{{ $investigation->recommendation }}</p>
+                @endif
+
+                @if($investigation->dokumen_rekomendasi)
+                    <div class="mt-2">
+                        <span class="text-muted small d-block">Dokumen Rekomendasi</span>
+                        <a href="{{ route('investigations.download-document-field', ['id' => $investigation->id, 'field' => 'dokumen_rekomendasi']) }}" class="btn btn-sm btn-outline-primary rounded-3 mt-1">
+                            <i class="bi bi-file-earmark-arrow-down me-1"></i> Unduh Dokumen Rekomendasi
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>
@@ -126,6 +144,14 @@
                     <p class="small text-dark mb-0">{{ $investigation->tindakLanjut->keterangan }}</p>
                 </div>
                 @endif
+                @if($investigation->tindakLanjut->dokumen)
+                <div class="mb-3">
+                    <span class="text-muted small d-block mb-1">Dokumen Lampiran Tindak Lanjut</span>
+                    <a href="{{ route('tindak-lanjut.download-document', $investigation->id) }}" class="btn btn-sm btn-outline-success rounded-3 mt-1">
+                        <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Unduh Dokumen Tindak Lanjut
+                    </a>
+                </div>
+                @endif
                 <div>
                     <span class="text-muted small d-block mb-1">Ditetapkan Oleh</span>
                     <p class="small text-dark mb-0">
@@ -148,11 +174,11 @@
                     </div>
                 @endif
 
-                <form action="{{ route('tindak-lanjut.store', $investigation->id) }}" method="POST">
+                <form action="{{ route('tindak-lanjut.store', $investigation->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Jenis Tindakan <span class="text-danger">*</span></label>
-                        <select name="jenis_tindakan" class="form-select rounded-3 @error('jenis_tindakan') is-invalid @enderror" required>
+                        <select name="jenis_tindakan" id="jenis_tindakan" class="form-select rounded-3 @error('jenis_tindakan') is-invalid @enderror" required>
                             <option value="">-- Pilih Jenis Tindakan --</option>
                             @foreach($jenisList as $key => $label)
                                 <option value="{{ $key }}" {{ old('jenis_tindakan') == $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -160,10 +186,24 @@
                         </select>
                         @error('jenis_tindakan')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+
+                    <div class="mb-3 d-none" id="jenis_tindakan_kustom_wrapper">
+                        <label for="jenis_tindakan_kustom" class="form-label fw-semibold small">Tuliskan Jenis Tindakan Lainnya <span class="text-danger">*</span></label>
+                        <input type="text" name="jenis_tindakan_kustom" id="jenis_tindakan_kustom" class="form-control rounded-3 @error('jenis_tindakan_kustom') is-invalid @enderror" placeholder="Masukkan jenis tindakan yang akan ditetapkan..." value="{{ old('jenis_tindakan_kustom') }}">
+                        @error('jenis_tindakan_kustom')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="mb-3 d-none" id="dokumen_tindakan_wrapper">
+                        <label for="dokumen_tindakan" class="form-label fw-semibold small">Dokumen Keputusan / Bukti Tindak Lanjut (Opsional)</label>
+                        <input type="file" name="dokumen_tindakan" id="dokumen_tindakan" class="form-control rounded-3 @error('dokumen_tindakan') is-invalid @enderror" accept=".pdf,.docx">
+                        <div class="form-text text-muted" style="font-size: 0.75rem;">Format: PDF, DOCX (Maks. 5 MB)</div>
+                        @error('dokumen_tindakan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+
                     <div class="mb-4">
                         <label class="form-label fw-semibold small">Keterangan / Catatan</label>
                         <textarea name="keterangan" class="form-control rounded-3 @error('keterangan') is-invalid @enderror"
-                            rows="4" placeholder="Uraian singkat tindak lanjut yang ditetapkan...">{{ old('keterangan') }}</textarea>
+                            rows="4" placeholder="Uraikan singkat tindak lanjut yang ditetapkan...">{{ old('keterangan') }}</textarea>
                         @error('keterangan')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
 
@@ -183,4 +223,39 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectEl = document.getElementById('jenis_tindakan');
+    const wrapperEl = document.getElementById('jenis_tindakan_kustom_wrapper');
+    const inputEl = document.getElementById('jenis_tindakan_kustom');
+    const documentWrapperEl = document.getElementById('dokumen_tindakan_wrapper');
+
+    if (selectEl && wrapperEl && inputEl && documentWrapperEl) {
+        function toggleKustom() {
+            const val = selectEl.value;
+            if (val === 'lainnya') {
+                wrapperEl.classList.remove('d-none');
+                inputEl.setAttribute('required', 'required');
+                documentWrapperEl.classList.add('d-none');
+            } else if (val !== '') {
+                wrapperEl.classList.add('d-none');
+                inputEl.removeAttribute('required');
+                inputEl.value = '';
+                documentWrapperEl.classList.remove('d-none');
+            } else {
+                wrapperEl.classList.add('d-none');
+                inputEl.removeAttribute('required');
+                inputEl.value = '';
+                documentWrapperEl.classList.add('d-none');
+            }
+        }
+
+        selectEl.addEventListener('change', toggleKustom);
+        toggleKustom();
+    }
+});
+</script>
+@endpush
 @endsection

@@ -36,7 +36,7 @@ class LaporanStatusUpdated extends Notification
             $mailMessage->line('Tim WBS memerlukan klarifikasi atau keterangan tambahan berikut:')
                 ->line('"' . $this->laporan->clarification_message . '"')
                 ->line('Silakan berikan tanggapan Anda dengan mengakses portal pelacakan laporan menggunakan kode akses/token tracking Anda.')
-                ->action('Berikan Klarifikasi', route('track.show', ['token' => $this->laporan->tracking_token]));
+                ->action('Berikan Klarifikasi', route('track.show', ['nomor_registrasi' => $this->laporan->nomor_registrasi]));
         } elseif ($this->laporan->verification_status === 'rejected') {
             $mailMessage->line('Alasan Penolakan: **' . $this->laporan->rejection_reason . '**');
             if ($this->laporan->verification_note) {
@@ -46,7 +46,7 @@ class LaporanStatusUpdated extends Notification
             if ($this->laporan->verification_note) {
                 $mailMessage->line('Catatan Verifikasi: ' . $this->laporan->verification_note);
             }
-            $mailMessage->action('Pantau Laporan', route('track.show', ['token' => $this->laporan->tracking_token]));
+            $mailMessage->action('Pantau Laporan', route('track.show', ['nomor_registrasi' => $this->laporan->nomor_registrasi]));
         }
 
         return $mailMessage

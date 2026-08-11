@@ -51,6 +51,13 @@ class LaporanService extends BaseService
             $data['deskripsi'] = trim((string) ($data['deskripsi'] ?? '')) ?: 'Deskripsi tidak diisi melalui formulir.';
             $data['is_anonim'] = (bool) ($data['is_anonim'] ?? true);
 
+            // Intercept custom source of information if "Lainnya" is selected
+            if (isset($data['custom_fields']['sumber_informasi']) && $data['custom_fields']['sumber_informasi'] === 'Lainnya') {
+                if (!empty($data['sumber_informasi_kustom'])) {
+                    $data['custom_fields']['sumber_informasi'] = $data['sumber_informasi_kustom'];
+                }
+            }
+
             // 4. Simpan laporan
             $data['custom_fields'] = $this->formatCustomFields((array) ($data['custom_fields'] ?? []));
 

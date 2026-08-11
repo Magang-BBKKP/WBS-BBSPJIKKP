@@ -22,8 +22,10 @@ class UpdateInvestigationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'final_result'   => ['required', 'string', 'min:10'],
-            'recommendation' => ['required', 'string', 'min:10'],
+            'final_result'        => ['required', 'string', 'min:10'],
+            'recommendation'      => ['required', 'string', 'min:10'],
+            'dokumen_hasil_akhir' => ['nullable', 'file', 'mimes:pdf,docx', 'max:5120'],
+            'dokumen_rekomendasi' => ['nullable', 'file', 'mimes:pdf,docx', 'max:5120'],
         ];
     }
 
@@ -35,10 +37,14 @@ class UpdateInvestigationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'final_result.required'   => 'Hasil investigasi akhir wajib diisi.',
-            'final_result.min'        => 'Hasil investigasi akhir minimal 10 karakter.',
-            'recommendation.required' => 'Rekomendasi tindakan wajib diisi.',
-            'recommendation.min'      => 'Rekomendasi tindakan minimal 10 karakter.',
+            'final_result.required'       => 'Hasil investigasi akhir wajib diisi.',
+            'final_result.min'            => 'Hasil investigasi akhir minimal 10 karakter.',
+            'recommendation.required'     => 'Rekomendasi tindakan wajib diisi.',
+            'recommendation.min'          => 'Rekomendasi tindakan minimal 10 karakter.',
+            'dokumen_hasil_akhir.mimes'   => 'Format Dokumen Hasil Akhir harus berupa PDF atau DOCX.',
+            'dokumen_hasil_akhir.max'     => 'Ukuran Dokumen Hasil Akhir maksimal 5 MB.',
+            'dokumen_rekomendasi.mimes'   => 'Format Dokumen Rekomendasi harus berupa PDF atau DOCX.',
+            'dokumen_rekomendasi.max'     => 'Ukuran Dokumen Rekomendasi maksimal 5 MB.',
         ];
     }
 }

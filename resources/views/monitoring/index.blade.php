@@ -84,8 +84,8 @@
         <h6 class="fw-bold mb-0"><i class="bi bi-table me-2 text-primary"></i>Daftar Seluruh Laporan</h6>
     </div>
     <div class="card-body px-4 pt-0 pb-3">
-        <form method="GET" class="row g-2 mb-3 mt-2">
-            <div class="col-md-4">
+        <form method="GET" class="row g-2 mb-3 mt-2" id="filterForm">
+            <div class="col-md-3">
                 <select name="status" class="form-select form-select-sm rounded-3">
                     <option value="">Semua Status</option>
                     @foreach($statusList as $key => $s)
@@ -93,7 +93,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <select name="kategori_id" class="form-select form-select-sm rounded-3">
                     <option value="">Semua Kategori</option>
                     @foreach($kategoris as $k)
@@ -102,11 +102,24 @@
                 </select>
             </div>
             <div class="col-md-2">
+                <select name="year" class="form-select form-select-sm rounded-3">
+                    <option value="">Semua Tahun</option>
+                    @foreach($years as $y)
+                        <option value="{{ $y }}" {{ $filterYear == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
                 <button type="submit" class="btn btn-sm btn-primary rounded-3 w-100">Filter</button>
             </div>
-            @if($filterStatus || $filterKategori)
             <div class="col-md-2">
-                <a href="{{ route('monitoring.index') }}" class="btn btn-sm btn-outline-secondary rounded-3 w-100">Reset</a>
+                <a href="{{ route('monitoring.export', request()->query()) }}" class="btn btn-sm btn-success rounded-3 w-100">
+                    <i class="bi bi-file-earmark-excel me-1"></i>Export
+                </a>
+            </div>
+            @if($filterStatus || $filterKategori || $filterYear)
+            <div class="col-12 text-end mt-1">
+                <a href="{{ route('monitoring.index') }}" class="btn btn-xs btn-link text-muted small p-0">Reset Filter</a>
             </div>
             @endif
         </form>
