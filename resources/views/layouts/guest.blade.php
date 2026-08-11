@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'WBS-BBSPJIKKP') }} - Secure Terminal</title>
+    <title>{{ config('app.name', 'WBS-BBSPJIKKP') }} - Terminal Aman</title>
     <link rel="icon" type="image/png" href="{{ asset('images/Logo Icon Only.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Logo Icon Only.png') }}">
 
@@ -140,7 +140,7 @@
 
         <div class="mt-4 text-center footer-links w-100" style="max-width: 500px;">
             <div class="d-flex justify-content-center gap-3 align-items-center flex-wrap">
-                <div><i class="bi bi-shield-check"></i> ISO 27001 Certified</div>
+                <div><i class="bi bi-shield-check"></i> Tersertifikasi ISO 27001</div>
                 <span>&bull;</span>
                 <div><i class="bi bi-shield-lock"></i> AES 256-bit</div>
                 <span>&bull;</span>

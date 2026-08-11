@@ -131,9 +131,9 @@
                 </div>
             </div>
             
-            <h1 class="display-5 fw-bold text-dark mb-3">Thank You</h1>
+            <h1 class="display-5 fw-bold text-dark mb-3">Terima Kasih</h1>
             <p class="text-muted mx-auto" style="max-width: 550px; font-size: 1rem; line-height: 1.6;">
-                Your report has been successfully submitted. Your identity remains 100% anonymous through our end-to-end encrypted integrity protocols.
+                Laporan Anda telah berhasil dikirim. Identitas Anda tetap 100% anonim melalui protokol integritas terenkripsi end-to-end kami.
             </p>
         </div>
         
@@ -142,17 +142,21 @@
             <div class="col-lg-5 col-md-7">
                 <div class="code-card">
                     <div class="text-center mb-4">
-                        <div class="code-label">Your unique access code</div>
+                        <div class="code-label">Kode Akses Unik Anda</div>
                         <div class="d-flex align-items-center justify-content-center gap-3">
-                            <div class="code-value">{{ $nomor }}</div>
+                            <div class="code-value">{{ $token }}</div>
                             <button class="copy-btn shadow-sm" onclick="copyNomor()" id="copyBtn">
                                 <i class="bi bi-files"></i>
                             </button>
                         </div>
                     </div>
                     
+                    <div class="text-center small text-secondary mb-3">
+                        Nomor Registrasi: <strong>{{ $nomor }}</strong>
+                    </div>
+                    
                     <div class="text-warning text-center small fw-semibold d-flex align-items-center justify-content-center gap-2 px-3">
-                        <i class="bi bi-exclamation-triangle"></i> Store this code safely. It is the ONLY way to track your report.
+                        <i class="bi bi-exclamation-triangle"></i> Simpan kode ini dengan aman. Ini SATU-SATUNYA cara untuk melacak laporan Anda.
                     </div>
                 </div>
             </div>
@@ -161,8 +165,8 @@
             <div class="col-lg-3 col-md-5">
                 <div class="encrypted-card">
                     <div class="encrypted-icon"><i class="bi bi-shield-lock-fill"></i></div>
-                    <h5 class="fw-bold mb-3">Encrypted</h5>
-                    <p class="text-white-50 small mb-0 lh-lg">Metadata scrubbed. IP address masked.<br>Secure transmission verified.</p>
+                    <h5 class="fw-bold mb-3">Terenkripsi</h5>
+                    <p class="text-white-50 small mb-0 lh-lg">Metadata dibersihkan. Alamat IP disamarkan.<br>Transmisi aman terverifikasi.</p>
                 </div>
             </div>
         </div>
@@ -170,10 +174,10 @@
         <!-- Buttons -->
         <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap">
             <button class="action-btn-dark d-flex align-items-center gap-2" onclick="window.print()">
-                <i class="bi bi-download"></i> Download PDF Confirmation
+                <i class="bi bi-download"></i> Unduh Konfirmasi PDF
             </button>
             <button class="action-btn-outline d-flex align-items-center gap-2" onclick="window.print()">
-                <i class="bi bi-printer"></i> Print Report Summary
+                <i class="bi bi-printer"></i> Cetak Ringkasan Laporan
             </button>
         </div>
         
@@ -181,29 +185,29 @@
         <div class="row justify-content-center mb-5">
             <div class="col-lg-8">
                 <div class="steps-container shadow-sm border border-light">
-                    <h4 class="fw-bold mb-4 text-dark fs-5">Next Steps in the Integrity Process</h4>
+                    <h4 class="fw-bold mb-4 text-dark fs-5">Langkah Selanjutnya dalam Proses Integritas</h4>
                     
                     <div class="step-item">
                         <div class="step-number">1</div>
                         <div class="step-content">
-                            <h5>Initial Triage</h5>
-                            <p>An independent ombudsman will review your submission within 48 business hours to determine the appropriate investigative channel.</p>
+                            <h5>Penelaahan Awal</h5>
+                            <p>Ombudsman independen akan meninjau pengaduan Anda dalam 48 jam kerja untuk menentukan jalur investigasi yang sesuai.</p>
                         </div>
                     </div>
                     
                     <div class="step-item">
                         <div class="step-number">2</div>
                         <div class="step-content">
-                            <h5>Status Updates</h5>
-                            <p>Use your access code above on the "Track" page to check for progress or respond to clarifying questions from the investigator.</p>
+                            <h5>Pembaruan Status</h5>
+                            <p>Gunakan kode akses Anda di halaman "Lacak" untuk memeriksa perkembangan atau menanggapi pertanyaan klarifikasi dari investigator.</p>
                         </div>
                     </div>
                     
                     <div class="step-item mb-0">
                         <div class="step-number">3</div>
                         <div class="step-content">
-                            <h5>Resolution</h5>
-                            <p>Upon conclusion, a final summary of the findings and actions taken will be posted to your secure portal.</p>
+                            <h5>Penyelesaian</h5>
+                            <p>Setelah selesai, ringkasan akhir temuan dan tindakan yang diambil akan ditampilkan di portal aman Anda.</p>
                         </div>
                     </div>
                 </div>
@@ -217,7 +221,7 @@
 @push('scripts')
 <script>
 function copyNomor() {
-    const nomor = '{{ $nomor }}';
+    const nomor = '{{ $token }}';
     navigator.clipboard.writeText(nomor).then(() => {
         const btn = document.getElementById('copyBtn');
         btn.innerHTML = '<i class="bi bi-check-lg"></i>';

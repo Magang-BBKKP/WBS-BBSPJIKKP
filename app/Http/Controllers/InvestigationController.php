@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateInvestigationRequest;
 use App\Services\InvestigationService;
 use App\Models\Investigation;
 use App\Models\InvestigationDocument;
+use App\Models\InvestigationTimelineEvidence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -78,7 +79,7 @@ class InvestigationController extends Controller
 
         $this->investigationService->addTimeline(
             $id,
-            $request->validated(),
+            array_merge($request->validated(), ['evidences' => $request->file('evidences')]),
             auth()->id(),
             $request->ip(),
             $request->userAgent()
@@ -86,6 +87,27 @@ class InvestigationController extends Controller
 
         return redirect()->route('investigations.show', $id)
             ->with('success', 'Timeline perkembangan berhasil ditambahkan.');
+    }
+
+    /**
+     * Securely download an evidence file attached to a timeline entry.
+     * Route: GET /investigations/{id}/timeline/{timelineId}/evidence/{evidenceId}/download
+     */
+    public function downloadTimelineEvidence($id, $timelineId, $evidenceId)
+    {
+        $investigation = Investigation::findOrFail($id);
+
+        Gate::authorize('downloadDocument', $investigation);
+
+        $evidence = InvestigationTimelineEvidence::where('investigation_timeline_id', $timelineId)
+            ->whereHas('timeline', fn ($q) => $q->where('investigation_id', $id))
+            ->findOrFail($evidenceId);
+
+        if (!Storage::disk('local')->exists($evidence->file_path)) {
+            abort(404, 'File bukti tidak ditemukan di server.');
+        }
+
+        return Storage::disk('local')->download($evidence->file_path, $evidence->file_name);
     }
 
     /**

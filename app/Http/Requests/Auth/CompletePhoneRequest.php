@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Rules\UniquePhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class CompletePhoneRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,17 +15,13 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone_number' => ['required', 'string', 'regex:/^(\+62|62|0)8[1-9][0-9]{7,11}$/', new UniquePhoneNumber],
-            'password' => ['required', 'min:8', 'confirmed', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/'],
+            'phone_number' => ['required', 'string', 'regex:/^(\+62|62|0)8[1-9][0-9]{7,11}$/', new UniquePhoneNumber(auth()->id())],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
             'phone_number.required' => 'Nomor WhatsApp aktif wajib diisi.',
             'phone_number.regex' => 'Format nomor WhatsApp tidak valid. Gunakan format Indonesia, mis. 0812-3456-7890.',
         ];

@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="auth-card">
-    <h2 class="auth-title">Password Recovery</h2>
-    <p class="auth-subtitle">Forgot your password? No problem. Just let us know your government email address and we will email you a password reset link.</p>
+    <h2 class="auth-title">Pemulihan Kata Sandi</h2>
+    <p class="auth-subtitle">Lupa kata sandi? Tidak masalah. Beri tahu kami alamat email kantor Anda dan kami akan mengirimkan tautan untuk mereset kata sandi melalui email.</p>
 
     @if (session('status'))
         <div class="alert alert-success small">
@@ -15,7 +15,7 @@
         @csrf
 
         <div class="mb-4">
-            <div class="text-secondary small mb-1">Official ID / Government Email</div>
+            <div class="text-secondary small mb-1">Email Resmi / ID Instansi</div>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus>
@@ -26,11 +26,11 @@
         </div>
 
         <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center w-100 text-white">
-            Email Password Reset Link <i class="bi bi-envelope-check ms-2"></i>
+            Kirim Tautan Reset Kata Sandi <i class="bi bi-envelope-check ms-2"></i>
         </button>
 
         <div class="mt-3 text-center">
-            <a href="{{ route('login') }}" class="small text-decoration-none" style="color: #475569;">Back to Login</a>
+            <a href="{{ route('login') }}" class="small text-decoration-none" style="color: #475569;">Kembali ke Login</a>
         </div>
     </form>
 </div>

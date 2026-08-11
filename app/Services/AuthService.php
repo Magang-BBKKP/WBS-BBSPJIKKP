@@ -132,6 +132,17 @@ class AuthService
         return $user;
     }
 
+    public function updatePhoneNumber(User $user, string $phoneNumber, string $ip, string $userAgent): User
+    {
+        $this->userRepository->update($user, [
+            'phone_number' => $phoneNumber,
+        ]);
+
+        $this->logActivity($user->id, 'Update Phone', 'User updated their active WhatsApp number.', $ip, $userAgent);
+
+        return $user;
+    }
+
     public function resetPassword(array $data, string $ip, string $userAgent): string
     {
         $status = Password::reset($data, function ($user, string $password) use ($ip, $userAgent) {

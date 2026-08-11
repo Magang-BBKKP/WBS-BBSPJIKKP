@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard' }} - WBS BBSPJIKKP</title>
+    <title>{{ $title ?? 'Dasbor' }} - WBS BBSPJIKKP</title>
     <link rel="icon" type="image/png" href="{{ asset('images/Logo Icon Only.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Logo Icon Only.png') }}">
     
@@ -132,7 +132,7 @@
                 <img src="{{ asset('images/logo-bbspjikkp.png') }}" alt="Logo BBSPJIKKP" style="height: 42px; width: auto;" class="img-fluid">
             </a>
             
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Buka navigasi">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -195,7 +195,7 @@
 
                             @can('view-dashboard')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('dashboard') ? 'active' : 'bg-hover-light' }}" href="{{ route('dashboard') }}">
-                                <i class="bi bi-grid-fill"></i> Dashboard
+                                <i class="bi bi-grid-fill"></i> Dasbor
                             </a>
                             @endcan
 
@@ -246,7 +246,7 @@
                             {{-- User Management --}}
                             @can('view-user')
                             <a class="nav-link rounded-3 fw-medium d-flex align-items-center gap-2 {{ request()->routeIs('users.*') ? 'active' : 'bg-hover-light' }}" href="{{ route('users.index') }}">
-                                <i class="bi bi-people"></i> User Management
+                                <i class="bi bi-people"></i> Manajemen Pengguna
                             </a>
                             @endcan
 

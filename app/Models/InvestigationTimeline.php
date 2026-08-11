@@ -26,4 +26,12 @@ class InvestigationTimeline extends Model
     {
         return $this->belongsTo(Investigation::class, 'investigation_id');
     }
+
+    /**
+     * Relationship with evidence attachments on this timeline entry.
+     */
+    public function evidences()
+    {
+        return $this->hasMany(InvestigationTimelineEvidence::class, 'investigation_timeline_id');
+    }
 }

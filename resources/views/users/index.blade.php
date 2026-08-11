@@ -6,7 +6,7 @@
         <!-- Breadcrumb / Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h3 text-gray-800 mb-0">User Management</h1>
+                <h1 class="h3 text-gray-800 mb-0">Manajemen Pengguna</h1>
                 <p class="text-muted mb-0">Kelola pengguna sistem dan pengaturan role mereka.</p>
             </div>
             @can('create', App\Models\User::class)
@@ -20,13 +20,13 @@
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
             </div>
         @endif
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
             </div>
         @endif
 
@@ -77,7 +77,7 @@
                                         <span class="badge bg-secondary text-capitalize">{{ str_replace('-', ' ', $role->name) }}</span>
                                     @endforeach
                                     @if ($user->roles->isEmpty())
-                                        <span class="badge bg-light text-dark">No Role</span>
+                                        <span class="badge bg-light text-dark">Tanpa Role</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -113,7 +113,7 @@
                                             </a>
                                         @endcan
                                         @can('delete', $user)
-                                            <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini? Action ini tidak dapat dibatalkan.');" class="d-inline">
+                                            <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini? Tindakan ini tidak dapat dibatalkan.');" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
