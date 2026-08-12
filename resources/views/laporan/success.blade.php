@@ -9,9 +9,14 @@
         background-color: #f8fafc;
     }
     
+    .success-page {
+        min-height: calc(100vh - 82px);
+        overflow: hidden;
+    }
+
     .confetti-bg {
         position: absolute;
-        top: 0; left: 0; right: 0; height: 350px;
+        top: 0; left: 0; right: 0; height: 430px;
         background-image: 
             radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.4) 4px, transparent 5px),
             radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.4) 4px, transparent 5px),
@@ -27,7 +32,7 @@
     .success-icon-container {
         position: relative;
         z-index: 1;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.65rem;
         display: inline-block;
     }
     
@@ -36,7 +41,7 @@
         background: #10b981;
         border-radius: 20px;
         display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+        box-shadow: 0 18px 38px -14px rgba(16, 185, 129, 0.7);
     }
     
     .success-icon-circle i {
@@ -47,25 +52,32 @@
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 2.5rem 2rem;
+        padding: 2.7rem 2.2rem;
+        min-height: 290px;
         height: 100%;
         display: flex; flex-direction: column; justify-content: center;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.32);
     }
     
     .code-label {
-        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700;
-        margin-bottom: 0.5rem;
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.2px; color: #64748b; font-weight: 800;
+        margin-bottom: 0.8rem;
     }
     
     .code-value {
-        font-size: 3rem; font-weight: 800; color: #0f172a; letter-spacing: 1px; line-height: 1.1;
+        font-size: clamp(2.35rem, 5vw, 3.2rem);
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 1px;
+        line-height: 1.08;
+        overflow-wrap: anywhere;
     }
     
     .copy-btn {
-        background: #eff6ff; color: #3b82f6; border: none; border-radius: 8px; width: 44px; height: 44px;
+        background: #eff6ff; color: #3b82f6; border: none; border-radius: 8px; width: 46px; height: 46px;
         display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
         transition: all 0.2s;
+        flex: 0 0 46px;
     }
     
     .copy-btn:hover { background: #dbeafe; }
@@ -73,11 +85,12 @@
     .encrypted-card {
         background: #0f172a;
         border-radius: 12px;
-        padding: 2.5rem 2rem;
+        padding: 2.7rem 2rem;
+        min-height: 290px;
         height: 100%;
         color: white;
         display: flex; flex-direction: column; justify-content: center;
-        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+        box-shadow: 0 22px 42px -20px rgba(15, 23, 42, 0.65);
     }
     
     .encrypted-icon {
@@ -96,6 +109,12 @@
     }
     
     .action-btn-outline:hover { background: #eff6ff; }
+
+    .success-summary {
+        max-width: 560px;
+        font-size: 1rem;
+        line-height: 1.65;
+    }
     
     .steps-container {
         background: #f8fafc;
@@ -116,11 +135,36 @@
     
     .step-content h5 { font-weight: 700; color: #1e293b; margin-bottom: 0.25rem; font-size: 1rem; }
     .step-content p { color: #475569; font-size: 0.9rem; margin-bottom: 0; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+        .success-page {
+            padding-top: 2.5rem !important;
+        }
+
+        .success-icon-circle {
+            width: 70px;
+            height: 70px;
+        }
+
+        .code-card,
+        .encrypted-card {
+            min-height: auto;
+            padding: 2rem 1.3rem;
+        }
+
+        .code-value {
+            font-size: 2.25rem;
+        }
+
+        .steps-container {
+            padding: 1.5rem;
+        }
+    }
 </style>
 @endpush
 
 @section('content')
-<div class="position-relative pt-5 pb-5 mt-4">
+<div class="success-page position-relative pt-5 pb-5 mt-4">
     <div class="confetti-bg"></div>
     
     <div class="container position-relative z-index-1">
@@ -132,8 +176,8 @@
             </div>
             
             <h1 class="display-5 fw-bold text-dark mb-3">Terima Kasih</h1>
-            <p class="text-muted mx-auto" style="max-width: 550px; font-size: 1rem; line-height: 1.6;">
-                Laporan Anda telah berhasil dikirim. Identitas Anda tetap 100% anonim melalui protokol integritas terenkripsi end-to-end kami.
+            <p class="text-muted mx-auto success-summary">
+                Laporan Anda berhasil dikirim. Identitas dan data pelapor tetap terlindungi melalui sistem pelaporan yang aman dan terenkripsi.
             </p>
         </div>
         
@@ -142,21 +186,17 @@
             <div class="col-lg-5 col-md-7">
                 <div class="code-card">
                     <div class="text-center mb-4">
-                        <div class="code-label">Kode Akses Unik Anda</div>
+                        <div class="code-label">Nomor Registrasi Laporan</div>
                         <div class="d-flex align-items-center justify-content-center gap-3">
-                            <div class="code-value">{{ $token }}</div>
+                            <div class="code-value">{{ $nomor }}</div>
                             <button class="copy-btn shadow-sm" onclick="copyNomor()" id="copyBtn">
                                 <i class="bi bi-files"></i>
                             </button>
                         </div>
                     </div>
                     
-                    <div class="text-center small text-secondary mb-3">
-                        Nomor Registrasi: <strong>{{ $nomor }}</strong>
-                    </div>
-                    
                     <div class="text-warning text-center small fw-semibold d-flex align-items-center justify-content-center gap-2 px-3">
-                        <i class="bi bi-exclamation-triangle"></i> Simpan kode ini dengan aman. Ini SATU-SATUNYA cara untuk melacak laporan Anda.
+                        <i class="bi bi-exclamation-triangle"></i> Simpan nomor registrasi ini dengan aman untuk melacak perkembangan laporan Anda.
                     </div>
                 </div>
             </div>
@@ -166,7 +206,7 @@
                 <div class="encrypted-card">
                     <div class="encrypted-icon"><i class="bi bi-shield-lock-fill"></i></div>
                     <h5 class="fw-bold mb-3">Terenkripsi</h5>
-                    <p class="text-white-50 small mb-0 lh-lg">Metadata dibersihkan. Alamat IP disamarkan.<br>Transmisi aman terverifikasi.</p>
+                    <p class="text-white-50 small mb-0 lh-lg">Metadata dibersihkan. Alamat IP disamarkan.<br>Pengiriman aman terverifikasi.</p>
                 </div>
             </div>
         </div>
@@ -185,13 +225,13 @@
         <div class="row justify-content-center mb-5">
             <div class="col-lg-8">
                 <div class="steps-container shadow-sm border border-light">
-                    <h4 class="fw-bold mb-4 text-dark fs-5">Langkah Selanjutnya dalam Proses Integritas</h4>
+                    <h4 class="fw-bold mb-4 text-dark fs-5">Langkah Selanjutnya</h4>
                     
                     <div class="step-item">
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h5>Penelaahan Awal</h5>
-                            <p>Ombudsman independen akan meninjau pengaduan Anda dalam 48 jam kerja untuk menentukan jalur investigasi yang sesuai.</p>
+                            <p>Tim WBS akan meninjau laporan Anda untuk menentukan proses penanganan yang sesuai.</p>
                         </div>
                     </div>
                     
@@ -199,7 +239,7 @@
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <h5>Pembaruan Status</h5>
-                            <p>Gunakan kode akses Anda di halaman "Lacak" untuk memeriksa perkembangan atau menanggapi pertanyaan klarifikasi dari investigator.</p>
+                            <p>Gunakan kode akses Anda di halaman "Lacak" untuk memeriksa perkembangan atau menanggapi permintaan klarifikasi.</p>
                         </div>
                     </div>
                     
@@ -207,7 +247,7 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h5>Penyelesaian</h5>
-                            <p>Setelah selesai, ringkasan akhir temuan dan tindakan yang diambil akan ditampilkan di portal aman Anda.</p>
+                            <p>Setelah proses selesai, ringkasan hasil penanganan akan tersedia melalui halaman pelacakan laporan.</p>
                         </div>
                     </div>
                 </div>
@@ -221,7 +261,7 @@
 @push('scripts')
 <script>
 function copyNomor() {
-    const nomor = '{{ $token }}';
+    const nomor = '{{ $nomor }}';
     navigator.clipboard.writeText(nomor).then(() => {
         const btn = document.getElementById('copyBtn');
         btn.innerHTML = '<i class="bi bi-check-lg"></i>';
