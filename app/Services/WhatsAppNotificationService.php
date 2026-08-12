@@ -177,7 +177,7 @@ class WhatsAppNotificationService
             'Laporan Anda telah berhasil dikirim ke sistem WBS BBSPJIKKP.',
             'Nomor Registrasi: #' . $laporan->nomor_registrasi,
             'Kode Akses (Unique Access Code): ' . $laporan->tracking_token,
-            'Simpan kode akses ini karena dibutuhkan untuk melacak status laporan Anda: ' . route('track.show', ['token' => $laporan->tracking_token]),
+            'Simpan kode akses ini karena dibutuhkan untuk melacak status laporan Anda: ' . route('track.show', ['nomor_registrasi' => $laporan->nomor_registrasi]),
             'Jangan bagikan kode akses ini kepada siapa pun.',
         ]);
     }
@@ -211,7 +211,7 @@ class WhatsAppNotificationService
             $lines[] = 'Catatan verifikasi: ' . $laporan->verification_note;
         }
 
-        $lines[] = 'Silakan pantau status laporan di portal tracking: ' . route('track.show', ['token' => $laporan->tracking_token]);
+        $lines[] = 'Silakan pantau status laporan di portal tracking: ' . route('track.show', ['nomor_registrasi' => $laporan->nomor_registrasi]);
 
         return implode(PHP_EOL . PHP_EOL, $lines);
     }
